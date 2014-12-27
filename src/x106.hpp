@@ -20,14 +20,22 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MX28_HPP_
-#define MX28_HPP_
+#ifndef X106_HPP_
+#define X106_HPP_
 
-#include "dynamixel_dip.hpp"
+#include "dynamixel.hpp"
 
-class MX28: public Dynamixel_DIP {
+class MX106;
+
+class X106 {
 public:
-    MX28(LibSerial::SerialStream&, const word& id);
+    X106(Dynamixel& dxl);
+    void setMasterMode(bool isMaster);
+    void setReverseMode(bool isMaster);
+    bool masterMode();
+    bool reverseMode();
+private:
+    Dynamixel& m_dynamixel;
 };
 
-#endif /* MX28_HPP_ */
+#endif /* X106_HPP_ */

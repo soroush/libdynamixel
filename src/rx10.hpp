@@ -20,14 +20,14 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MX28_HPP_
-#define MX28_HPP_
+#ifndef RX10_HPP_
+#define RX10_HPP_
 
-#include "dynamixel_dip.hpp"
+#include "dynamixel_cms.hpp"
 
-class MX28: public Dynamixel_DIP {
+class RX10: public Dynamixel_CMS {
 public:
-    MX28(LibSerial::SerialStream&, const word& id);
+    RX10(LibSerial::SerialStream&, const word& id);
 };
 
-#endif /* MX28_HPP_ */
+#endif /* RX10_HPP_ */

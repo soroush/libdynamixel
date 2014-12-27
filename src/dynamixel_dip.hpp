@@ -20,14 +20,29 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MX28_HPP_
-#define MX28_HPP_
+#ifndef DYNAMIXEL_DIP_HPP_
+#define DYNAMIXEL_DIP_HPP_
 
-#include "dynamixel_dip.hpp"
+#include "dynamixel.hpp"
 
-class MX28: public Dynamixel_DIP {
+class Dynamixel_DIP: public Dynamixel {
 public:
-    MX28(LibSerial::SerialStream&, const word& id);
+    Dynamixel_DIP(LibSerial::SerialStream&, const word& id);
+    Dynamixel_DIP(LibSerial::SerialStream&, const word& id, const word& steps,
+            const word& maxSpeed, const float& startAngle,
+            const float& stopAngle, const word& startGap, const word& stopGap,
+            const float& resolutionD, const float& resolutionR
+            );
+    unsigned int D();
+    unsigned int I();
+    unsigned int P();
+    unsigned int goalAcceleration();
+
+    void setD(const unsigned int&);
+    void setI(const unsigned int&);
+    void setP(const unsigned int&);
+    void setGoalAcceleration(const unsigned int&);
+
 };
 
-#endif /* MX28_HPP_ */
+#endif /* DYNAMIXEL_DIP_HPP_ */

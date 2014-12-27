@@ -23,11 +23,11 @@
 #ifndef AX12_HPP_
 #define AX12_HPP_
 
-#include <dynamixel.hpp>
+#include "dynamixel_cms.hpp"
 
-//class AX12 : public Dynamixel {
-//public:
-//    AX12();
-//};
+class AX12: public Dynamixel_CMS {
+public:
+    AX12(LibSerial::SerialStream&, const word& id);
+};
 
 #endif /* AX12_HPP_ */

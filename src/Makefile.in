@@ -123,8 +123,11 @@ am__uninstall_files_from_dir = { \
 am__installdirs = "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(dynamixel_includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
-libdynamixel_la_LIBADD =
-am_libdynamixel_la_OBJECTS = dynamixel.lo ax12.lo mx28.lo
+am__DEPENDENCIES_1 =
+libdynamixel_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+am_libdynamixel_la_OBJECTS = dynamixel.lo dynamixel_cms.lo dx113.lo \
+	dx116.lo dx117.lo ax12.lo ex106plus.lo dynamixel_dip.lo \
+	x106.lo mx12w.lo mx28.lo mx64.lo mx106.lo dynamixel_dip_ctg.lo
 libdynamixel_la_OBJECTS = $(am_libdynamixel_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -237,6 +240,8 @@ LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBSERIAL_CFLAGS = @LIBSERIAL_CFLAGS@
+LIBSERIAL_LIBS = @LIBSERIAL_LIBS@
 LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
@@ -258,6 +263,9 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+PKG_CONFIG = @PKG_CONFIG@
+PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
+PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
 RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
@@ -321,15 +329,38 @@ ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 lib_LTLIBRARIES = libdynamixel.la
 libdynamixel_la_SOURCES = \
 	dynamixel.cpp \
+	dynamixel_cms.cpp \
+	dx113.cpp \
+	dx116.cpp \
+	dx117.cpp \
 	ax12.cpp \
-	mx28.cpp 
+	ex106plus.cpp \
+	dynamixel_dip.cpp \
+	x106.cpp \
+	mx12w.cpp \
+	mx28.cpp \
+	mx64.cpp \
+	mx106.cpp \
+	dynamixel_dip_ctg.cpp
 
+libdynamixel_la_LIBADD = $(LIBSERIAL_LIBS)
 libdynamixel_la_LDFLAGS = -version-info $(DYNAMIXEL_SO_VERSION)
 dynamixel_includedir = $(includedir)/dynamixel
 dynamixel_include_HEADERS = \
 	dynamixel.hpp \
+	dynamixel_cms.hpp \
+	dx113.hpp \
+	dx116.hpp \
+	dx117.hpp \
 	ax12.hpp \
-	mx28.hpp 
+	ex106plus.hpp \
+	dynamixel_dip.hpp \
+	x106.hpp \
+	mx12w.hpp \
+	mx28.hpp \
+	mx64.hpp \
+	mx106.hpp \
+	dynamixel_dip_ctg.hpp
 
 all: all-am
 
@@ -411,8 +442,19 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ax12.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dx113.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dx116.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dx117.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel_cms.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel_dip.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel_dip_ctg.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ex106plus.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx106.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx12w.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx28.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx64.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/x106.Plo@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

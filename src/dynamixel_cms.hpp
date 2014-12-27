@@ -20,14 +20,27 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MX28_HPP_
-#define MX28_HPP_
+#ifndef DYNAMIXEL_CMS_HPP_
+#define DYNAMIXEL_CMS_HPP_
 
-#include "dynamixel_dip.hpp"
+#include "dynamixel.hpp"
 
-class MX28: public Dynamixel_DIP {
+class Dynamixel_CMS: public Dynamixel {
 public:
-    MX28(LibSerial::SerialStream&, const word& id);
+    Dynamixel_CMS(LibSerial::SerialStream&, const word& id);
+    Dynamixel_CMS(LibSerial::SerialStream&, const word& id, const word& steps,
+            const word& maxSpeed, const float& startAngle,
+            const float& stopAngle, const word& startGap, const word& stopGap,
+            const float& resolutionD, const float& resolutionR
+            );
+    unsigned int complianceMargineCC();
+    unsigned int complianceSlopeCC();
+    unsigned int complianceMargineCCW();
+    unsigned int complianceSlopeCCW();
+    void setComplianceMargineCC(const unsigned int&);
+    void setComplianceSlopeCC(const unsigned int&);
+    void setComplianceMargineCCW(const unsigned int&);
+    void setComplianceSlopeCCW(const unsigned int&);
 };
 
-#endif /* MX28_HPP_ */
+#endif /* DYNAMIXEL_CMS_HPP_ */

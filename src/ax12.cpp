@@ -21,9 +21,10 @@
  */
 
 #include "ax12.hpp"
+using namespace std;
+using namespace LibSerial;
 
-//AX12::AX12() {
-//    // TODO Auto-generated constructor stub
-//
-//}
-
+AX12::AX12(SerialStream& serial, const word& id) :
+        Dynamixel_CMS { serial, id, 1023, 1023, 30.0, 330.0, 102, 102,
+                3.41333333333, 195.569594071 } {
+}

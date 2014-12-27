@@ -20,14 +20,11 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MX28_HPP_
-#define MX28_HPP_
+#include "dx116.hpp"
+using namespace std;
+using namespace LibSerial;
 
-#include "dynamixel_dip.hpp"
-
-class MX28: public Dynamixel_DIP {
-public:
-    MX28(LibSerial::SerialStream&, const word& id);
-};
-
-#endif /* MX28_HPP_ */
+DX116::DX116(SerialStream& serial, const word& id) :
+        Dynamixel_CMS { serial, id, 1023, 1023, 30.0, 330.0, 102, 102,
+                3.41333333333, 195.569594071 } {
+}
