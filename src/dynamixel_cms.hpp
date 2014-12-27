@@ -25,22 +25,25 @@
 
 #include "dynamixel.hpp"
 
-class Dynamixel_CMS: public Dynamixel {
+namespace Dynamixel {
+
+class Dynamixel_CMS: public DynamixelBase {
 public:
-    Dynamixel_CMS(LibSerial::SerialStream&, const word& id);
-    Dynamixel_CMS(LibSerial::SerialStream&, const word& id, const word& steps,
-            const word& maxSpeed, const float& startAngle,
-            const float& stopAngle, const word& startGap, const word& stopGap,
-            const float& resolutionD, const float& resolutionR
-            );
-    unsigned int complianceMargineCC();
-    unsigned int complianceSlopeCC();
-    unsigned int complianceMargineCCW();
-    unsigned int complianceSlopeCCW();
-    void setComplianceMargineCC(const unsigned int&);
-    void setComplianceSlopeCC(const unsigned int&);
-    void setComplianceMargineCCW(const unsigned int&);
-    void setComplianceSlopeCCW(const unsigned int&);
+	Dynamixel_CMS(LibSerial::SerialStream&, const word& id);
+	Dynamixel_CMS(LibSerial::SerialStream&, const word& id, const word& steps,
+			const word& maxSpeed, const float& startAngle,
+			const float& stopAngle, const word& startGap, const word& stopGap,
+			const float& resolutionD, const float& resolutionR);
+	unsigned int complianceMargineCC();
+	unsigned int complianceSlopeCC();
+	unsigned int complianceMargineCCW();
+	unsigned int complianceSlopeCCW();
+	void setComplianceMargineCC(const unsigned int&);
+	void setComplianceSlopeCC(const unsigned int&);
+	void setComplianceMargineCCW(const unsigned int&);
+	void setComplianceSlopeCCW(const unsigned int&);
 };
+
+}  // namespace Dynamixel
 
 #endif /* DYNAMIXEL_CMS_HPP_ */

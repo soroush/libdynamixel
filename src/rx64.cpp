@@ -21,7 +21,9 @@
  */
 
 #include "rx64.hpp"
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 RX64::RX64(SerialStream& serial, const word& id) :

@@ -25,9 +25,13 @@
 
 #include "dynamixel_cms.hpp"
 
+namespace Dynamixel {
+
 class RX10: public Dynamixel_CMS {
 public:
     RX10(LibSerial::SerialStream&, const word& id);
 };
+
+}  // namespace Dynamixel
 
 #endif /* RX10_HPP_ */

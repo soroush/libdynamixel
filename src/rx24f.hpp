@@ -25,9 +25,13 @@
 
 #include "dynamixel_cms.hpp"
 
+namespace Dynamixel {
+
 class RX24F: public Dynamixel_CMS {
 public:
-    RX24F(LibSerial::SerialStream&, const word& id);
+	RX24F(LibSerial::SerialStream&, const word& id);
 };
+
+}  // namespace Dynamixel
 
 #endif /* RX24F_HPP_ */

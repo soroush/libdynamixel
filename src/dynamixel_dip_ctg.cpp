@@ -21,7 +21,9 @@
  */
 
 #include "dynamixel_dip_ctg.hpp"
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 Dynamixel_DIP_CTG::Dynamixel_DIP_CTG(SerialStream& serial, const word& id) :

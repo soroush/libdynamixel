@@ -25,9 +25,13 @@
 
 #include "dynamixel_cms.hpp"
 
+namespace Dynamixel {
+
 class AX12: public Dynamixel_CMS {
 public:
-    AX12(LibSerial::SerialStream&, const word& id);
+	AX12(LibSerial::SerialStream&, const word& id);
 };
+
+}  // namespace Dynamixel
 
 #endif /* AX12_HPP_ */

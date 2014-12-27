@@ -21,7 +21,9 @@
  */
 
 #include "rx10.hpp"
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 RX10::RX10(SerialStream& serial, const word& id) :

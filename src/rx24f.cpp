@@ -21,7 +21,9 @@
  */
 
 #include "rx24f.hpp"
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 RX24F::RX24F(SerialStream& serial, const word& id) :

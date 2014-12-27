@@ -26,11 +26,15 @@
 #include "dynamixel_cms.hpp"
 #include "x106.hpp"
 
+namespace Dynamixel {
+
 class EX106Plus: public Dynamixel_CMS, public X106 {
 public:
-    EX106Plus(LibSerial::SerialStream&, const unsigned int& id);
-    word sensedCurrent();
-    void setSensedCurrent(const unsigned int&);
+	EX106Plus(LibSerial::SerialStream&, const unsigned int& id);
+	word sensedCurrent();
+	void setSensedCurrent(const unsigned int&);
 };
+
+}  // namespace Dynamixel
 
 #endif /* EX106PLUS_HPP_ */

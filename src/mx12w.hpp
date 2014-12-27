@@ -25,9 +25,13 @@
 
 #include "dynamixel_dip.hpp"
 
+namespace Dynamixel {
+
 class MX12W: public Dynamixel_DIP {
 public:
     MX12W(LibSerial::SerialStream&, const word& id);
 };
+
+}  // namespace Dynamixel
 
 #endif /* MX12W_HPP_ */

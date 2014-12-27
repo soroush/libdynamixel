@@ -23,14 +23,15 @@
 #include "dynamixel.hpp"
 #include <stdexcept>
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
-Dynamixel::Dynamixel(SerialStream& serial, const word& id) :
+DynamixelBase::DynamixelBase(SerialStream& serial, const word& id) :
         m_serial(serial), m_id { id } {
     m_data[3] = this->m_id;
 }
 
-Dynamixel::Dynamixel(SerialStream& serial, const word& id, const word& steps,
+DynamixelBase::DynamixelBase(SerialStream& serial, const word& id, const word& steps,
         const word& maxSpeed, const float& startAngle, const float& stopAngle,
         const word& startGap, const word& stopGap, const float& resolutionD,
         const float& resolutionR) :
@@ -41,7 +42,7 @@ Dynamixel::Dynamixel(SerialStream& serial, const word& id, const word& steps,
     m_data[3] = this->m_id;
 }
 
-void Dynamixel::read(const size_t& start, const size_t& length) {
+void DynamixelBase::read(const size_t& start, const size_t& length) {
     char packet[8] = { 0xFF, 0xFF, this->m_data[3], 0x04, 0x02, //
             static_cast<char>(start), static_cast<char>(length), 0x00 };
     addChecksum(packet, 8);
@@ -62,7 +63,7 @@ void Dynamixel::read(const size_t& start, const size_t& length) {
     }
 }
 
-void Dynamixel::write(const byte* data, const size_t& size,
+void DynamixelBase::write(const byte* data, const size_t& size,
         const size_t& start) {
     // TODO: Check sanity of given data
     // Send data to dynamixel
@@ -93,7 +94,7 @@ void Dynamixel::write(const byte* data, const size_t& size,
     }
 }
 
-word Dynamixel::presentPosition() {
+word DynamixelBase::presentPosition() {
     this->read(0x24, 2);
     word position = 0xFFFF;
     position |= this->m_data[0x25];
@@ -102,7 +103,7 @@ word Dynamixel::presentPosition() {
     return position;
 }
 
-word Dynamixel::presentSpeed() {
+word DynamixelBase::presentSpeed() {
     this->read(0x26, 2);
     word speed = 0xFFFF;
     speed |= this->m_data[0x27];
@@ -111,19 +112,19 @@ word Dynamixel::presentSpeed() {
     return speed;
 }
 
-void Dynamixel::setGoalPosition(const word& position) {
+void DynamixelBase::setGoalPosition(const word& position) {
     byte packet[2] = { // L-H
             static_cast<byte>(position >> 8), static_cast<byte>(position & 0xFF), };
     this->write(packet, 2, 0x1E);
 }
 
-void Dynamixel::setMovingSpeed(const word& speed) {
+void DynamixelBase::setMovingSpeed(const word& speed) {
     byte packet[2] = { // L-H
             static_cast<byte>(speed >> 8), static_cast<byte>(speed & 0xFF), };
     this->write(packet, 2, 0x20);
 }
 
-void Dynamixel::setGoalPositionSpeed(const word& position, const word& speed) {
+void DynamixelBase::setGoalPositionSpeed(const word& position, const word& speed) {
     byte packet[4] = { // L-H
             static_cast<byte>(position >> 8),
                     static_cast<byte>(position & 0xFF), static_cast<byte>(speed
@@ -131,7 +132,7 @@ void Dynamixel::setGoalPositionSpeed(const word& position, const word& speed) {
     this->write(packet, 4, 0x1E);
 }
 
-void Dynamixel::goTo(const float& target, const float& speed,
+void DynamixelBase::goTo(const float& target, const float& speed,
         const Coordinate& universe, const AngleUnit& a_unit,
         const VelocityUnit& v_unit) {
     word targetPosition;
@@ -168,9 +169,9 @@ void Dynamixel::goTo(const float& target, const float& speed,
     setGoalPositionSpeed(targetPosition, targetSpeed);
 }
 
-void Dynamixel::rotate(const float& rotation, const word& speed,
-        const Dynamixel::AngleUnit& units,
-        const Dynamixel::VelocityUnit& v_unit) {
+void DynamixelBase::rotate(const float& rotation, const word& speed,
+        const DynamixelBase::AngleUnit& units,
+        const DynamixelBase::VelocityUnit& v_unit) {
     word currentPosition = this->presentPosition();
     word targetPosition;
     word targetSpeed;
@@ -204,8 +205,8 @@ void Dynamixel::rotate(const float& rotation, const word& speed,
     this->setGoalPositionSpeed(targetPosition, targetSpeed);
 }
 
-void Dynamixel::rotate(const float& rotation, const Dynamixel::AngleUnit& units,
-        const Dynamixel::VelocityUnit& v_unit) {
+void DynamixelBase::rotate(const float& rotation, const DynamixelBase::AngleUnit& units,
+        const DynamixelBase::VelocityUnit& v_unit) {
     word currentPosition = this->presentPosition();
     word targetPosition;
     switch (units) {
@@ -224,7 +225,7 @@ void Dynamixel::rotate(const float& rotation, const Dynamixel::AngleUnit& units,
     this->setGoalPosition(targetPosition);
 }
 
-void Dynamixel::addChecksum(byte* input, const size_t& length) {
+void DynamixelBase::addChecksum(byte* input, const size_t& length) {
     word sum = 0;
     for (size_t index = 2; index < length - 1; ++index) {
         sum += input[index];
@@ -233,7 +234,7 @@ void Dynamixel::addChecksum(byte* input, const size_t& length) {
     input[length - 1] = low;
 }
 
-bool Dynamixel::checkChecksum(const byte* input, const size_t& length) {
+bool DynamixelBase::checkChecksum(const byte* input, const size_t& length) {
     word sum = 0;
     for (size_t index = 2; index < length - 1; ++index) {
         sum += input[index];

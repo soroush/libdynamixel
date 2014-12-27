@@ -22,6 +22,7 @@
 
 #include "ax12.hpp"
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 AX12::AX12(SerialStream& serial, const word& id) :

@@ -22,10 +22,13 @@
 
 #include "x106.hpp"
 #include <cmath>
+
 #define _USE_MATH_DEFINES
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
-X106::X106(Dynamixel& dxl):
+X106::X106(DynamixelBase& dxl):
     m_dynamixel(dxl){
 }

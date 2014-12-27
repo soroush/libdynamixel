@@ -22,16 +22,17 @@
 
 #include "dynamixel_cms.hpp"
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 Dynamixel_CMS::Dynamixel_CMS(SerialStream& serial, const word& id) :
-        Dynamixel { serial, id } {
+		DynamixelBase { serial, id } {
 }
 
 Dynamixel_CMS::Dynamixel_CMS(SerialStream& serial, const word& id,
-        const word& steps, const word& maxSpeed, const float& startAngle,
-        const float& stopAngle, const word& startGap, const word& stopGap,
-        const float& resolutionD, const float& resolutionR) :
-        Dynamixel { serial, id, steps, maxSpeed, startAngle, stopAngle,
-                startGap, stopGap, resolutionD, resolutionR } {
+		const word& steps, const word& maxSpeed, const float& startAngle,
+		const float& stopAngle, const word& startGap, const word& stopGap,
+		const float& resolutionD, const float& resolutionR) :
+		DynamixelBase { serial, id, steps, maxSpeed, startAngle, stopAngle,
+				startGap, stopGap, resolutionD, resolutionR } {
 }

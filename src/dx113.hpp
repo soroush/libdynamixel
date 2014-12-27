@@ -25,9 +25,13 @@
 
 #include "dynamixel_cms.hpp"
 
+namespace Dynamixel {
+
 class DX113: public Dynamixel_CMS {
 public:
     DX113(LibSerial::SerialStream&, const word& id);
 };
+
+}  // namespace Dynamixel
 
 #endif /* DX113_HPP_ */

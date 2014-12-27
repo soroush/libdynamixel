@@ -22,6 +22,7 @@
 
 #include "dx113.hpp"
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 DX113::DX113(SerialStream& serial, const word& id) :

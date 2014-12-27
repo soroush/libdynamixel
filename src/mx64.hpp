@@ -25,9 +25,13 @@
 
 #include "dynamixel_dip_ctg.hpp"
 
+namespace Dynamixel {
+
 class MX64: public Dynamixel_DIP_CTG {
 public:
-    MX64(LibSerial::SerialStream&, const word& id);
+	MX64(LibSerial::SerialStream&, const word& id);
 };
+
+}  // namespace Dynamixel
 
 #endif /* MX64_HPP_ */

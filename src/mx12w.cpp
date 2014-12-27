@@ -22,8 +22,11 @@
 
 #include "mx12w.hpp"
 #include <cmath>
+
 #define _USE_MATH_DEFINES
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 MX12W::MX12W(SerialStream& serial, const word& id) :

@@ -22,8 +22,11 @@
 
 #include "mx64.hpp"
 #include <cmath>
+
 #define _USE_MATH_DEFINES
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 MX64::MX64(SerialStream& serial, const word& id) :

@@ -22,13 +22,16 @@
 
 #include "mx106.hpp"
 #include <cmath>
+
 #define _USE_MATH_DEFINES
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 MX106::MX106(SerialStream& serial, const word& id) :
         Dynamixel_DIP_CTG { serial, id, 4095, 1023, 0.0, 360.0, 0, 0, 4096.0
                 / 360.0, 4096.0 / 2 * M_PI }, X106(
-                static_cast<Dynamixel&>(*this)) {
+                static_cast<DynamixelBase&>(*this)) {
 }
 

@@ -25,7 +25,9 @@
 
 #include "dynamixel.hpp"
 
-class Dynamixel_DIP: public Dynamixel {
+namespace Dynamixel {
+
+class Dynamixel_DIP: public DynamixelBase {
 public:
     Dynamixel_DIP(LibSerial::SerialStream&, const word& id);
     Dynamixel_DIP(LibSerial::SerialStream&, const word& id, const word& steps,
@@ -44,5 +46,7 @@ public:
     void setGoalAcceleration(const unsigned int&);
 
 };
+
+}  // namespace Dynamixel
 
 #endif /* DYNAMIXEL_DIP_HPP_ */

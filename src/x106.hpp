@@ -25,17 +25,21 @@
 
 #include "dynamixel.hpp"
 
+namespace Dynamixel {
+
 class MX106;
 
 class X106 {
 public:
-    X106(Dynamixel& dxl);
-    void setMasterMode(bool isMaster);
-    void setReverseMode(bool isMaster);
-    bool masterMode();
-    bool reverseMode();
+	X106(DynamixelBase& dxl);
+	void setMasterMode(bool isMaster);
+	void setReverseMode(bool isMaster);
+	bool masterMode();
+	bool reverseMode();
 private:
-    Dynamixel& m_dynamixel;
+	DynamixelBase& m_dynamixel;
 };
+
+}  // namespace Dynamixel
 
 #endif /* X106_HPP_ */

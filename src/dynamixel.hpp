@@ -30,97 +30,101 @@
 typedef char byte;
 typedef uint_fast16_t word;
 
-class Dynamixel {
-    friend class X106;
+namespace Dynamixel {
+
+class DynamixelBase {
+	friend class X106;
 public:
-    enum class Coordinate {
-        Default, Trigonometric,
-    };
-    enum class AngleUnit {
-        Default, Degree, Radian
-    };
-    enum class VelocityUnit {
-        Default, RPM
-    };
-    Dynamixel(LibSerial::SerialStream&, const word& id);
-    Dynamixel(LibSerial::SerialStream&, const word& id, const word& steps,
-            const word& maxSpeed, const float& startAngle,
-            const float& stopAngle, const word& startGap, const word& stopGap,
-            const float& resolutionD, const float& resolutionR);
-    virtual ~Dynamixel();
-    // Low level API layer
-    void read(const std::size_t&, const std::size_t&);
-    void write(const byte*, const std::size_t&, const std::size_t&);
-    // | High level API layer
-    // |--- Readers
-    word model();
-    word firmware();
-    word id();
-    word baudrate();
-    word delay();
-    word cwAngleLimit();
-    word ccwAngleLimit();
-    word highTemperatureLimit();
-    word lowVoltageLimit();
-    word highVoltageLimit();
-    word maxTorque();
-    word minTorque();
-    word statusReturnLevel();
-    word alarmLED();
-    word alarmShutdown();
-    word multiTurnOffset();
-    word resolutionDivider();
-    bool torqueEnable();
-    bool LEDEnable();
-    word goalPosition();
-    word movingSpeed();
-    word torqueLimit();
-    word presentPosition();
-    word presentSpeed();
-    word presentLoad();
-    word presentVoltage();
-    word presentTemperature();
-    bool registered();
-    bool moving();
-    bool locked();
-    word punch();
-    // |--- Writers
-    void setGoalPosition(const word&);
-    void setMovingSpeed(const word&);
-    void setGoalPositionSpeed(const word& step, const word& speed);
-    void setTorqueLimit(const word&);
-    void setLock(const bool&);
-    void setPunch(const word&);
+	enum class Coordinate {
+		Default, Trigonometric,
+	};
+	enum class AngleUnit {
+		Default, Degree, Radian
+	};
+	enum class VelocityUnit {
+		Default, RPM
+	};
+	DynamixelBase(LibSerial::SerialStream&, const word& id);
+	DynamixelBase(LibSerial::SerialStream&, const word& id, const word& steps,
+			const word& maxSpeed, const float& startAngle,
+			const float& stopAngle, const word& startGap, const word& stopGap,
+			const float& resolutionD, const float& resolutionR);
+	virtual ~DynamixelBase();
+	// Low level API layer
+	void read(const std::size_t&, const std::size_t&);
+	void write(const byte*, const std::size_t&, const std::size_t&);
+	// | High level API layer
+	// |--- Readers
+	word model();
+	word firmware();
+	word id();
+	word baudrate();
+	word delay();
+	word cwAngleLimit();
+	word ccwAngleLimit();
+	word highTemperatureLimit();
+	word lowVoltageLimit();
+	word highVoltageLimit();
+	word maxTorque();
+	word minTorque();
+	word statusReturnLevel();
+	word alarmLED();
+	word alarmShutdown();
+	word multiTurnOffset();
+	word resolutionDivider();
+	bool torqueEnable();
+	bool LEDEnable();
+	word goalPosition();
+	word movingSpeed();
+	word torqueLimit();
+	word presentPosition();
+	word presentSpeed();
+	word presentLoad();
+	word presentVoltage();
+	word presentTemperature();
+	bool registered();
+	bool moving();
+	bool locked();
+	word punch();
+	// |--- Writers
+	void setGoalPosition(const word&);
+	void setMovingSpeed(const word&);
+	void setGoalPositionSpeed(const word& step, const word& speed);
+	void setTorqueLimit(const word&);
+	void setLock(const bool&);
+	void setPunch(const word&);
 
-    virtual void goTo(const float& target, const float& speed,
-            const Coordinate& universe = Coordinate::Default,
-            const AngleUnit& a_unit = AngleUnit::Default,
-            const VelocityUnit& v_unit = VelocityUnit::Default);
-    virtual void goTo(const float& target, const Coordinate& universe =
-            Coordinate::Default, const AngleUnit& a_unit = AngleUnit::Default,
-            const VelocityUnit& v_unit = VelocityUnit::Default);
+	virtual void goTo(const float& target, const float& speed,
+			const Coordinate& universe = Coordinate::Default,
+			const AngleUnit& a_unit = AngleUnit::Default,
+			const VelocityUnit& v_unit = VelocityUnit::Default);
+	virtual void goTo(const float& target, const Coordinate& universe =
+			Coordinate::Default, const AngleUnit& a_unit = AngleUnit::Default,
+			const VelocityUnit& v_unit = VelocityUnit::Default);
 
-    virtual void rotate(const float& rotation, const word& speed,
-            const AngleUnit& a_unit = AngleUnit::Default,
-            const VelocityUnit& v_unit = VelocityUnit::Default);
-    virtual void rotate(const float& rotation, const AngleUnit& a_unit =
-            AngleUnit::Default, const VelocityUnit& v_unit =
-            VelocityUnit::Default);
+	virtual void rotate(const float& rotation, const word& speed,
+			const AngleUnit& a_unit = AngleUnit::Default,
+			const VelocityUnit& v_unit = VelocityUnit::Default);
+	virtual void rotate(const float& rotation, const AngleUnit& a_unit =
+			AngleUnit::Default, const VelocityUnit& v_unit =
+			VelocityUnit::Default);
 
 protected:
-    void addChecksum(byte*, const std::size_t&);
-    bool checkChecksum(const byte*, const std::size_t&);
-    LibSerial::SerialStream &m_serial;
-    byte m_data[74];
-    word m_id;
-    word m_steps;
-    word m_maxSpeed;
-    float m_startAngle;
-    float m_stopAngle;
-    word m_startGap;
-    word m_stopGap;
-    float m_resolutionD;
-    float m_resolutionR;
+	void addChecksum(byte*, const std::size_t&);
+	bool checkChecksum(const byte*, const std::size_t&);
+	LibSerial::SerialStream &m_serial;
+	byte m_data[74];
+	word m_id;
+	word m_steps;
+	word m_maxSpeed;
+	float m_startAngle;
+	float m_stopAngle;
+	word m_startGap;
+	word m_stopGap;
+	float m_resolutionD;
+	float m_resolutionR;
 };
+
+}  // namespace Dynamixel
 
 #endif /* DYNAMIXEL_HPP_ */

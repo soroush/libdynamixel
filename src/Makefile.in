@@ -126,8 +126,9 @@ LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libdynamixel_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
 am_libdynamixel_la_OBJECTS = dynamixel.lo dynamixel_cms.lo dx113.lo \
-	dx116.lo dx117.lo ax12.lo ex106plus.lo dynamixel_dip.lo \
-	x106.lo mx12w.lo mx28.lo mx64.lo mx106.lo dynamixel_dip_ctg.lo
+	dx116.lo dx117.lo ax12.lo rx10.lo rx24f.lo rx28.lo rx64.lo \
+	ex106plus.lo dynamixel_dip.lo x106.lo mx12w.lo mx28.lo mx64.lo \
+	mx106.lo dynamixel_dip_ctg.lo
 libdynamixel_la_OBJECTS = $(am_libdynamixel_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -334,6 +335,10 @@ libdynamixel_la_SOURCES = \
 	dx116.cpp \
 	dx117.cpp \
 	ax12.cpp \
+	rx10.cpp \
+	rx24f.cpp \
+	rx28.cpp \
+	rx64.cpp \
 	ex106plus.cpp \
 	dynamixel_dip.cpp \
 	x106.cpp \
@@ -353,6 +358,10 @@ dynamixel_include_HEADERS = \
 	dx116.hpp \
 	dx117.hpp \
 	ax12.hpp \
+	rx10.hpp \
+	rx24f.hpp \
+	rx28.hpp \
+	rx64.hpp \
 	ex106plus.hpp \
 	dynamixel_dip.hpp \
 	x106.hpp \
@@ -454,6 +463,10 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx12w.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx28.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx64.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rx10.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rx24f.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rx28.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/rx64.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/x106.Plo@am__quote@
 
 .cpp.o:

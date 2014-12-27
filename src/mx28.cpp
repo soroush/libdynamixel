@@ -22,8 +22,11 @@
 
 #include "mx28.hpp"
 #include <cmath>
+
 #define _USE_MATH_DEFINES
+
 using namespace std;
+using namespace Dynamixel;
 using namespace LibSerial;
 
 MX28::MX28(SerialStream& serial, const word& id) :

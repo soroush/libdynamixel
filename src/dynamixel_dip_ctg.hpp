@@ -25,6 +25,8 @@
 
 #include "dynamixel_dip.hpp"
 
+namespace Dynamixel {
+
 class Dynamixel_DIP_CTG: public Dynamixel_DIP {
 public:
     Dynamixel_DIP_CTG(LibSerial::SerialStream&, const word& id);
@@ -34,5 +36,7 @@ public:
             const float& resolutionD, const float& resolutionR
             );
 };
+
+}  // namespace Dynamixel
 
 #endif /* DYNAMIXEL_DIP_CTG_HPP_ */

@@ -26,9 +26,13 @@
 #include "dynamixel_dip_ctg.hpp"
 #include "x106.hpp"
 
-class MX106: public Dynamixel_DIP_CTG, public X106{
+namespace Dynamixel {
+
+class MX106: public Dynamixel_DIP_CTG, public X106 {
 public:
-    MX106(LibSerial::SerialStream&, const word& id);
+	MX106(LibSerial::SerialStream&, const word& id);
 };
+
+}  // namespace Dynamixel
 
 #endif /* MX106_HPP_ */
