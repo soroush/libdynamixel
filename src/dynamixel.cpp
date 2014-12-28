@@ -96,7 +96,6 @@ void DynamixelBase::write(const byte* data, const size_t& size,
 
 word DynamixelBase::presentPosition() {
 	this->read(0x24, 2);
-	word position = 0xFFFF;
 	word position = ((0x0000 | this->m_data[0x25]) << 8) | this->m_data[0x24];
 	return position;
 }
