@@ -29,12 +29,14 @@ namespace Dynamixel {
 
 class Dynamixel_DIP: public DynamixelBase {
 public:
-    Dynamixel_DIP(LibSerial::SerialStream&, const word& id);
-    Dynamixel_DIP(LibSerial::SerialStream&, const word& id, const word& steps,
+    Dynamixel_DIP(Serial&, const word& id);
+    Dynamixel_DIP(Serial&, const word& id, const word& steps,
             const word& maxSpeed, const float& startAngle,
             const float& stopAngle, const word& startGap, const word& stopGap,
             const float& resolutionD, const float& resolutionR
             );
+	word multiTurnOffset();
+	word resolutionDivider();
     unsigned int D();
     unsigned int I();
     unsigned int P();

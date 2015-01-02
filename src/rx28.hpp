@@ -29,7 +29,7 @@ namespace Dynamixel {
 
 class RX28: public Dynamixel_CMS {
 public:
-    RX28(LibSerial::SerialStream&, const word& id);
+    RX28(Serial&, const word& id);
 };
 
 }  // namespace Dynamixel

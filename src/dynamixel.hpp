@@ -25,10 +25,12 @@
 
 #include <cstddef>
 #include <memory>
-#include <SerialStream.h>
+#include <vector>
+#include "serial.hpp"
 
-typedef char byte;
+typedef unsigned char byte;
 typedef uint_fast16_t word;
+typedef std::vector<byte> Buffer;
 
 namespace Dynamixel {
 
@@ -44,19 +46,20 @@ public:
 	enum class VelocityUnit {
 		Default, RPM
 	};
-	DynamixelBase(LibSerial::SerialStream&, const word& id);
-	DynamixelBase(LibSerial::SerialStream&, const word& id, const word& steps,
+	DynamixelBase(Serial&, const word& id);
+	DynamixelBase(Serial&, const word& id, const word& steps,
 			const word& maxSpeed, const float& startAngle,
 			const float& stopAngle, const word& startGap, const word& stopGap,
 			const float& resolutionD, const float& resolutionR);
 	virtual ~DynamixelBase();
 	// Low level API layer
 	void read(const std::size_t&, const std::size_t&);
-	void write(const byte*, const std::size_t&, const std::size_t&);
+	void write(const Buffer&, const std::size_t&);
 	// | High level API layer
 	// |--- Readers
 	word model();
 	word firmware();
+	void setId(const byte&);
 	word id();
 	word baudrate();
 	word delay();
@@ -66,12 +69,9 @@ public:
 	word lowVoltageLimit();
 	word highVoltageLimit();
 	word maxTorque();
-	word minTorque();
 	word statusReturnLevel();
 	word alarmLED();
 	word alarmShutdown();
-	word multiTurnOffset();
-	word resolutionDivider();
 	bool torqueEnable();
 	bool LEDEnable();
 	word goalPosition();
@@ -110,9 +110,9 @@ public:
 			VelocityUnit::Default);
 
 protected:
-	void addChecksum(byte*, const std::size_t&);
-	bool checkChecksum(const byte*, const std::size_t&);
-	LibSerial::SerialStream &m_serial;
+	void addChecksum(Buffer&);
+	bool checkChecksum(const Buffer&);
+	Serial &m_serial;
 	byte m_data[74];
 	word m_id;
 	word m_steps;

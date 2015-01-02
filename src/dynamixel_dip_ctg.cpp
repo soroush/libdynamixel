@@ -24,13 +24,12 @@
 
 using namespace std;
 using namespace Dynamixel;
-using namespace LibSerial;
 
-Dynamixel_DIP_CTG::Dynamixel_DIP_CTG(SerialStream& serial, const word& id) :
+Dynamixel_DIP_CTG::Dynamixel_DIP_CTG(Serial& serial, const word& id) :
         Dynamixel_DIP { serial, id } {
 }
 
-Dynamixel_DIP_CTG::Dynamixel_DIP_CTG(SerialStream& serial, const word& id,
+Dynamixel_DIP_CTG::Dynamixel_DIP_CTG(Serial& serial, const word& id,
         const word& steps, const word& maxSpeed, const float& startAngle,
         const float& stopAngle, const word& startGap, const word& stopGap,
         const float& resolutionD, const float& resolutionR) :

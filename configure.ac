@@ -20,6 +20,6 @@ PKG_CHECK_MODULES([LIBSERIAL], [libserial >= 0.6.0])
 AC_SUBST([DYNAMIXEL_SO_VERSION], [0:0:0])
 AC_SUBST([DYNAMIXEL_API_VERSION], [0.1.0])
 
-AC_CONFIG_FILES([Makefile src/Makefile
+AC_CONFIG_FILES([Makefile src/Makefile test/Makefile
                  libdynamixel.pc:libdynamixel.pc.in])
 AC_OUTPUT

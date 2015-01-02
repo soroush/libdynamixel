@@ -29,7 +29,7 @@ namespace Dynamixel {
 
 class DX113: public Dynamixel_CMS {
 public:
-    DX113(LibSerial::SerialStream&, const word& id);
+    DX113(Serial&, const word& id);
 };
 
 }  // namespace Dynamixel

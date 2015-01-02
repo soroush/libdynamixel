@@ -1,6 +1,7 @@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 lib_LTLIBRARIES = libdynamixel.la
 libdynamixel_la_SOURCES = \
+	serial.cpp \
 	dynamixel.cpp \
 	dynamixel_cms.cpp \
 	dx113.cpp \
@@ -23,6 +24,7 @@ libdynamixel_la_LIBADD = $(LIBSERIAL_LIBS)
 libdynamixel_la_LDFLAGS = -version-info $(DYNAMIXEL_SO_VERSION)
 dynamixel_includedir = $(includedir)/dynamixel
 dynamixel_include_HEADERS = \
+	serial.hpp \
 	dynamixel.hpp \
 	dynamixel_cms.hpp \
 	dx113.hpp \
