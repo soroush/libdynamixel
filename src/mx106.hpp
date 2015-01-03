@@ -30,7 +30,7 @@ namespace Dynamixel {
 
 class MX106: public Dynamixel_DIP_CTG, public X106 {
 public:
-	MX106(Serial&, const word& id);
+	MX106(LibSerial::SerialStream&, const word& id);
 };
 
 }  // namespace Dynamixel

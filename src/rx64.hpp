@@ -29,7 +29,7 @@ namespace Dynamixel {
 
 class RX64: public Dynamixel_CMS {
 public:
-    RX64(Serial&, const word& id);
+    RX64(LibSerial::SerialStream&, const word& id);
 };
 
 }  // namespace Dynamixel

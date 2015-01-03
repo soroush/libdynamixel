@@ -27,16 +27,17 @@
 
 using namespace std;
 using namespace Dynamixel;
+using namespace LibSerial;
 
-DynamixelBase::DynamixelBase(Serial& serial, const word& id) :
+DynamixelBase::DynamixelBase(SerialStream& serial, const word& id) :
 		m_serial(serial), m_id { id } {
 	m_data[3] = this->m_id;
 }
 
-DynamixelBase::DynamixelBase(Serial& serial, const word& id, const word& steps,
-		const word& maxSpeed, const float& startAngle, const float& stopAngle,
-		const word& startGap, const word& stopGap, const float& resolutionD,
-		const float& resolutionR) :
+DynamixelBase::DynamixelBase(SerialStream& serial, const word& id,
+		const word& steps, const word& maxSpeed, const float& startAngle,
+		const float& stopAngle, const word& startGap, const word& stopGap,
+		const float& resolutionD, const float& resolutionR) :
 		m_serial(serial), m_id { id }, m_steps { steps }, m_startAngle {
 				startAngle }, m_stopAngle { stopAngle }, m_startGap { startGap }, m_stopGap {
 				stopGap }, m_resolutionD { resolutionD }, m_resolutionR {
@@ -51,16 +52,18 @@ void DynamixelBase::read(const size_t& start, const size_t& length) {
 	Buffer packet = { 0xFF, 0xFF, this->m_data[3], 0x04, 0x02, //
 			static_cast<char>(start), static_cast<char>(length), 0x00 };
 	addChecksum(packet);
-	m_serial.write(packet);
+	m_serial.write(packet.data(), packet.size());
 //	cout << "RWRITE: ";
 //	for (int i = 0; i < 8; ++i) {
 //		cout << std::hex << (static_cast<short>(packet[i]) & 0x00FF) << ' ';
 //	}
 //	cout << std::endl;
 //	usleep(1000);
-	Buffer statusPacket;
-	statusPacket.resize(6+length);
-	statusPacket = m_serial.read(6 + length);
+//	Buffer statusPacket;
+	byte statusPacketBuffer[6 + length];
+//	statusPacket.resize(6+length);
+	m_serial.read(statusPacketBuffer, 6 + length);
+	Buffer statusPacket { statusPacketBuffer, statusPacketBuffer + 6 + length };
 //	cout << "RREAD : ";
 //	for (int i = 0; i < 6 + length; ++i) {
 //		cout << std::hex << static_cast<int>(statusPacket[i] & 0x00FF) << ' ';
@@ -104,11 +107,13 @@ void DynamixelBase::write(const Buffer& data, const size_t& start) {
 //		cout << std::hex << (static_cast<short>(packet[i]) & 0x00FF) << ' ';
 //	}
 //	cout << std::endl;
-	m_serial.write(packet);
+	m_serial.write(packet.data(),packet.size());
 //	m_serial.flush();
 	// Read status packet
 //	usleep(1000);
-	Buffer statusPacket = m_serial.read(6);
+	byte statusPacketBuffer[6];
+	m_serial.read(statusPacketBuffer,6);
+	Buffer statusPacket{statusPacketBuffer, statusPacketBuffer+6};
 	//m_serial.flush();
 //	cout << "WREAD : ";
 //	for (int i = 0; i < 6; ++i) {
@@ -488,7 +493,7 @@ void DynamixelBase::rotate(const float& rotation,
 }
 
 void DynamixelBase::addChecksum(Buffer& input) {
-	size_t length=input.size();
+	size_t length = input.size();
 	word sum = 0;
 	for (size_t index = 2; index < length - 1; ++index) {
 		sum += input[index];
@@ -499,7 +504,7 @@ void DynamixelBase::addChecksum(Buffer& input) {
 
 bool DynamixelBase::checkChecksum(const Buffer& input) {
 	word sum = 0;
-	size_t length=input.size();
+	size_t length = input.size();
 	for (size_t index = 2; index < length - 1; ++index) {
 		sum += input[index];
 	}

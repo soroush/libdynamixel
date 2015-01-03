@@ -27,6 +27,7 @@
 
 using namespace std;
 using namespace Dynamixel;
+using namespace LibSerial;
 
 X106::X106(DynamixelBase& dxl):
     m_dynamixel(dxl){

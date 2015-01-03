@@ -23,8 +23,9 @@
 #include "dx113.hpp"
 using namespace std;
 using namespace Dynamixel;
+using namespace LibSerial;
 
-DX113::DX113(Serial& serial, const word& id) :
+DX113::DX113(SerialStream& serial, const word& id) :
         Dynamixel_CMS { serial, id, 1023, 1023, 30.0, 330.0, 102, 102,
                 3.41333333333, 195.569594071 } {
 }

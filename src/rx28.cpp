@@ -24,8 +24,9 @@
 
 using namespace std;
 using namespace Dynamixel;
+using namespace LibSerial;
 
-RX28::RX28(Serial& serial, const word& id) :
+RX28::RX28(SerialStream& serial, const word& id) :
         Dynamixel_CMS { serial, id, 1023, 1023, 30.0, 330.0, 102, 102,
                 3.41333333333, 195.569594071 } {
 }

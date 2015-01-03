@@ -27,8 +27,9 @@
 
 using namespace std;
 using namespace Dynamixel;
+using namespace LibSerial;
 
-MX12W::MX12W(Serial& serial, const word& id) :
+MX12W::MX12W(SerialStream& serial, const word& id) :
         Dynamixel_DIP { serial, id, 4095, 1023, 0.0, 360.0, 0, 0, 4096.0
                 / 360.0, 4096.0 / 2 * M_PI } {
 }

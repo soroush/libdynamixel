@@ -29,7 +29,7 @@ namespace Dynamixel {
 
 class MX64: public Dynamixel_DIP_CTG {
 public:
-	MX64(Serial&, const word& id);
+	MX64(LibSerial::SerialStream&, const word& id);
 };
 
 }  // namespace Dynamixel

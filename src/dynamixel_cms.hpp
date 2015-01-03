@@ -29,8 +29,8 @@ namespace Dynamixel {
 
 class Dynamixel_CMS: public DynamixelBase {
 public:
-	Dynamixel_CMS(Serial&, const word& id);
-	Dynamixel_CMS(Serial&, const word& id, const word& steps,
+	Dynamixel_CMS(LibSerial::SerialStream&, const word& id);
+	Dynamixel_CMS(LibSerial::SerialStream&, const word& id, const word& steps,
 			const word& maxSpeed, const float& startAngle,
 			const float& stopAngle, const word& startGap, const word& stopGap,
 			const float& resolutionD, const float& resolutionR);

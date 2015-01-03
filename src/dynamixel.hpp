@@ -26,9 +26,9 @@
 #include <cstddef>
 #include <memory>
 #include <vector>
-#include "serial.hpp"
+#include <SerialStream.h>
 
-typedef unsigned char byte;
+typedef char byte;
 typedef uint_fast16_t word;
 typedef std::vector<byte> Buffer;
 
@@ -46,8 +46,8 @@ public:
 	enum class VelocityUnit {
 		Default, RPM
 	};
-	DynamixelBase(Serial&, const word& id);
-	DynamixelBase(Serial&, const word& id, const word& steps,
+	DynamixelBase(LibSerial::SerialStream&, const word& id);
+	DynamixelBase(LibSerial::SerialStream&, const word& id, const word& steps,
 			const word& maxSpeed, const float& startAngle,
 			const float& stopAngle, const word& startGap, const word& stopGap,
 			const float& resolutionD, const float& resolutionR);
@@ -112,7 +112,7 @@ public:
 protected:
 	void addChecksum(Buffer&);
 	bool checkChecksum(const Buffer&);
-	Serial &m_serial;
+	LibSerial::SerialStream &m_serial;
 	byte m_data[74];
 	word m_id;
 	word m_steps;

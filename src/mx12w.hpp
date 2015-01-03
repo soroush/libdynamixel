@@ -29,7 +29,7 @@ namespace Dynamixel {
 
 class MX12W: public Dynamixel_DIP {
 public:
-    MX12W(Serial&, const word& id);
+    MX12W(LibSerial::SerialStream&, const word& id);
 };
 
 }  // namespace Dynamixel

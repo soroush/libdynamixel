@@ -22,62 +22,44 @@
 
 #include "../src/ax12.hpp"
 #include "../src/mx28.hpp"
-#include "../src/serial.hpp"
 #include <unistd.h>
 #include <iostream>
+#include <SerialPort.h>
+#include <SerialStream.h>
 
 using namespace std;
 using namespace Dynamixel;
+using namespace LibSerial;
 
 int main() {
-	Serial port { "/dev/ttyUSB0", Serial::BaudRate::BAUD_57600,
-			Serial::CharacterSize::CHAR_SIZE_8, Serial::Parity::PARITY_NONE,
-			Serial::StopBits::STOP_BITS_1,
-			Serial::FlowControlEnum::FLOW_CONTROL_NONE };
-	MX28 m1 { port, 2 };
-	m1.goTo(0);
-	while (m1.moving()) {
-		usleep(200000);
-		cout << "Moving..." << endl;
+	SerialStream stream("/dev/ttyUSB0", SerialStreamBuf::BAUD_57600,
+			SerialStreamBuf::CHAR_SIZE_8, SerialStreamBuf::PARITY_NONE, 1,
+			SerialStreamBuf::FLOW_CONTROL_NONE);
+    stream.SetVMin(100);
+    stream.SetVTime(1);
+	MX28 m1 { stream, 2 };
+//	m1.setGoalPositionSpeed(4095,1024);
+	for(int i=0; i< 4096; i+= 100){
+		usleep(50000);
+		m1.goTo(i);
+		usleep(100000);
+		cout << m1.presentPosition() << endl;
+		cout << m1.presentSpeed() << endl;
+		cout << m1.presentLoad() << endl;
+		cout << m1.presentVoltage() << endl;
 	}
-	cout << "Done" << endl;
-//	m1.rotate(90,DynamixelBase::AngleUnit::Degree);
-//	for (int i = 0; i < 4096; i += 50) {
-//		usleep(500000);
-//		m1.goTo(0);
-//	cout << "Position: " << m1.presentPosition() << endl;
-//	cout << "Speed: " << m1.presentSpeed() << endl;
-//	cout << "Voltage: " << m1.presentVoltage() << endl;
-//	cout << "Temperature: " << m1.presentTemperature() << endl;
-//		usleep(500000);
-//		m1.goTo(4095);
-//	}
-//	usleep(1000000);
-//	usleep(1000000);
-//	usleep(1000000);
-
-//	m1.rotate(-90, DynamixelBase::AngleUnit::Degree);
-//	m1.rotate(+90, DynamixelBase::AngleUnit::Degree);
-//	port.Close();
-
-//
-//	for (int i = 0; i < 4000; i+=100) {
-//		cout << i << ": " << endl;
-//		std::vector<unsigned char> x = {0xff, 0xff, 0x02, 0x05, 0x03, 0x1e, static_cast<unsigned char>(((i)&0x00FF)<<8),
-//                static_cast<unsigned char>(((i)&0xFF00)>>8),
-//                0xe3};
-//		x[8] = ~(x[2] + x[3] + x[4] + x[5] + x[6] + x[7]);
-//		port.write(x);
-//		for (const auto& i : x) {
-//			cout << std::hex << (static_cast<int>(i) & 0x00FF) << ' ';
-//		}
-//		std::vector<unsigned char> y;
-//		y = port.read(8);
-//		for (const auto& i : y) {
-//			cout << std::hex << (static_cast<int>(i) & 0x00FF) << ' ';
-//		}
-//		cout << endl;
-//		usleep(100000);
-//	}
-//	port.close();
+	for(int i=0; i< 4096; i+= 100){
+		usleep(10000);
+		m1.goTo(4095);
+		cout << m1.presentPosition() << endl;
+		cout << m1.presentSpeed() << endl;
+		cout << m1.presentLoad() << endl;
+		cout << m1.presentVoltage() << endl;
+		usleep(10000);
+		m1.goTo(0);
+		cout << m1.presentPosition() << endl;
+		cout << m1.presentSpeed() << endl;
+		cout << m1.presentLoad() << endl;
+		cout << m1.presentVoltage() << endl;
+	}
 }

@@ -23,12 +23,13 @@
 #include "dynamixel_dip.hpp"
 using namespace std;
 using namespace Dynamixel;
+using namespace LibSerial;
 
-Dynamixel_DIP::Dynamixel_DIP(Serial& serial, const word& id) :
+Dynamixel_DIP::Dynamixel_DIP(SerialStream& serial, const word& id) :
         DynamixelBase { serial, id } {
 }
 
-Dynamixel_DIP::Dynamixel_DIP(Serial& serial, const word& id,
+Dynamixel_DIP::Dynamixel_DIP(SerialStream& serial, const word& id,
         const word& steps, const word& maxSpeed, const float& startAngle,
         const float& stopAngle, const word& startGap, const word& stopGap,
         const float& resolutionD, const float& resolutionR) :

@@ -95,7 +95,9 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am_dynamixel_test_OBJECTS = dynamixel.$(OBJEXT)
 dynamixel_test_OBJECTS = $(am_dynamixel_test_OBJECTS)
-dynamixel_test_DEPENDENCIES = ../src/libdynamixel.la
+am__DEPENDENCIES_1 =
+dynamixel_test_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	../src/libdynamixel.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -493,7 +495,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(srcdir)/.. $(OTHER_CPPFLAGS)
 dynamixel_test_SOURCES = dynamixel.cpp
-dynamixel_test_LDADD = ../src/libdynamixel.la
+dynamixel_test_LDADD = $(LIBSERIAL_LIBS) ../src/libdynamixel.la
 all: all-am
 
 .SUFFIXES:
