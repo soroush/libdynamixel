@@ -23,7 +23,7 @@
 #ifndef X106_HPP_
 #define X106_HPP_
 
-#include "dynamixel.hpp"
+#include "dynamixel_base.hpp"
 
 namespace Dynamixel {
 

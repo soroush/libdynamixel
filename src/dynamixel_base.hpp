@@ -20,8 +20,8 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef DYNAMIXEL_HPP_
-#define DYNAMIXEL_HPP_
+#ifndef DYNAMIXEL_BASE_HPP_
+#define DYNAMIXEL_BASE_HPP_
 
 #include <cstddef>
 #include <memory>
@@ -127,4 +127,4 @@ protected:
 
 }  // namespace Dynamixel
 
-#endif /* DYNAMIXEL_HPP_ */
+#endif /* DYNAMIXEL_BASE_HPP_ */

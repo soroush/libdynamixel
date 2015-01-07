@@ -125,10 +125,10 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libdynamixel_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
-am_libdynamixel_la_OBJECTS = dynamixel.lo dynamixel_cms.lo dx113.lo \
-	dx116.lo dx117.lo ax12.lo rx10.lo rx24f.lo rx28.lo rx64.lo \
-	ex106plus.lo dynamixel_dip.lo x106.lo mx12w.lo mx28.lo mx64.lo \
-	mx106.lo dynamixel_dip_ctg.lo
+am_libdynamixel_la_OBJECTS = dynamixel_base.lo dynamixel_cms.lo \
+	dx113.lo dx116.lo dx117.lo ax12.lo rx10.lo rx24f.lo rx28.lo \
+	rx64.lo ex106plus.lo dynamixel_dip.lo x106.lo mx12w.lo mx28.lo \
+	mx64.lo mx106.lo dynamixel_dip_ctg.lo
 libdynamixel_la_OBJECTS = $(am_libdynamixel_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -329,7 +329,7 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
 lib_LTLIBRARIES = libdynamixel.la
 libdynamixel_la_SOURCES = \
-	dynamixel.cpp \
+	dynamixel_base.cpp \
 	dynamixel_cms.cpp \
 	dx113.cpp \
 	dx116.cpp \
@@ -352,7 +352,7 @@ libdynamixel_la_LIBADD = $(LIBSERIAL_LIBS)
 libdynamixel_la_LDFLAGS = -version-info $(DYNAMIXEL_SO_VERSION)
 dynamixel_includedir = $(includedir)/dynamixel
 dynamixel_include_HEADERS = \
-	dynamixel.hpp \
+	dynamixel_base.hpp \
 	dynamixel_cms.hpp \
 	dx113.hpp \
 	dx116.hpp \
@@ -454,7 +454,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dx113.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dx116.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dx117.Plo@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel_base.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel_cms.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel_dip.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dynamixel_dip_ctg.Plo@am__quote@

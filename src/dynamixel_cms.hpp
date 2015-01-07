@@ -23,7 +23,7 @@
 #ifndef DYNAMIXEL_CMS_HPP_
 #define DYNAMIXEL_CMS_HPP_
 
-#include "dynamixel.hpp"
+#include "dynamixel_base.hpp"
 
 namespace Dynamixel {
 

@@ -23,7 +23,7 @@
 #ifndef DYNAMIXEL_DIP_HPP_
 #define DYNAMIXEL_DIP_HPP_
 
-#include "dynamixel.hpp"
+#include "dynamixel_base.hpp"
 
 namespace Dynamixel {
 
