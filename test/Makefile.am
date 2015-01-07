@@ -1,5 +1,5 @@
 AM_CPPFLAGS = -I$(srcdir)/.. $(OTHER_CPPFLAGS)
-check_PROGRAMS = dynamixel_test 
-dynamixel_test_SOURCES = dynamixel.cpp
-dynamixel_test_LDADD = $(LIBSERIAL_LIBS) ../src/libdynamixel.la
-TESTS = dynamixel_test
+check_PROGRAMS = mx28_test 
+mx28_test_SOURCES = mx28.cpp
+mx28_test_LDADD = $(LIBSERIAL_LIBS) ../src/libdynamixel.la
+TESTS = mx28_test

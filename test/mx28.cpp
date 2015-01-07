@@ -37,29 +37,38 @@ int main() {
 			SerialStreamBuf::FLOW_CONTROL_NONE);
     stream.SetVMin(100);
     stream.SetVTime(1);
-	MX28 m1 { stream, 2 };
-//	m1.setGoalPositionSpeed(4095,1024);
-	for(int i=0; i< 4096; i+= 100){
-		usleep(50000);
-		m1.goTo(i);
-		usleep(100000);
-		cout << m1.presentPosition() << endl;
-		cout << m1.presentSpeed() << endl;
-		cout << m1.presentLoad() << endl;
-		cout << m1.presentVoltage() << endl;
-	}
-	for(int i=0; i< 4096; i+= 100){
-		usleep(10000);
-		m1.goTo(4095);
-		cout << m1.presentPosition() << endl;
-		cout << m1.presentSpeed() << endl;
-		cout << m1.presentLoad() << endl;
-		cout << m1.presentVoltage() << endl;
-		usleep(10000);
-		m1.goTo(0);
-		cout << m1.presentPosition() << endl;
-		cout << m1.presentSpeed() << endl;
-		cout << m1.presentLoad() << endl;
-		cout << m1.presentVoltage() << endl;
-	}
+	MX28 m1 { stream, 1 };
+	m1.setGoalPositionSpeed(2090,30);
+	usleep(1000000);
+//	while(m1.moving()){
+//		cout << "Position  : " << m1.presentPosition() << endl;
+//		cout << "Speed  : " << m1.presentSpeed() << endl;
+//		cout << "Voltage: " << m1.presentVoltage() << endl;
+//		usleep(10000);
+//	}
+//	m1.rotate(45,50,DynamixelBase::AngleUnit::Degree,
+//			DynamixelBase::VelocityUnit::Default);
+//	for(int i=0; i< 4096; i+= 100){
+//		usleep(50000);
+//		m1.goTo(i);
+//		usleep(100000);
+//		cout << m1.presentPosition() << endl;
+//		cout << m1.presentSpeed() << endl;
+//		cout << m1.presentLoad() << endl;
+//		cout << m1.presentVoltage() << endl;
+//	}
+//	for(int i=0; i< 4096; i+= 100){
+//		usleep(10000);
+//		m1.goTo(4095);
+//		cout << m1.presentPosition() << endl;
+//		cout << m1.presentSpeed() << endl;
+//		cout << m1.presentLoad() << endl;
+//		cout << m1.presentVoltage() << endl;
+//		usleep(10000);
+//		m1.goTo(0);
+//		cout << m1.presentPosition() << endl;
+//		cout << m1.presentSpeed() << endl;
+//		cout << m1.presentLoad() << endl;
+//		cout << m1.presentVoltage() << endl;
+//	}
 }
