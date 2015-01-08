@@ -32,8 +32,8 @@ class MX106;
 class X106 {
 public:
 	X106(DynamixelBase& dxl);
-	void setMasterMode(bool isMaster);
-	void setReverseMode(bool isMaster);
+	void setMasterMode(const bool& isMaster);
+	void setReverseMode(const bool& isReverse);
 	bool masterMode();
 	bool reverseMode();
 private:

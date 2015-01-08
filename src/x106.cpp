@@ -21,14 +21,45 @@
  */
 
 #include "x106.hpp"
-#include <cmath>
-
-#define _USE_MATH_DEFINES
 
 using namespace std;
 using namespace Dynamixel;
 using namespace LibSerial;
 
-X106::X106(DynamixelBase& dxl):
-    m_dynamixel(dxl){
+X106::X106(DynamixelBase& dxl) :
+        m_dynamixel(dxl) {
+}
+
+void X106::setMasterMode(const bool& isMaster) {
+    m_dynamixel.read(0x0A, 1);
+    Buffer newMode = { static_cast<byte>(m_dynamixel.m_data[0x0A] |
+            (isMaster ? byte{0x02} : byte{0x00})) };
+    m_dynamixel.write(newMode,0x0A);
+}
+
+void X106::setReverseMode(const bool& isReverse) {
+    m_dynamixel.read(0x0A, 1);
+    Buffer newMode = { static_cast<byte>(m_dynamixel.m_data[0x0A] |
+            (isReverse ? byte{0x01} : byte{0x00})) };
+    m_dynamixel.write(newMode,0x0A);
+}
+
+bool X106::masterMode() {
+    m_dynamixel.read(0x0A, 1);
+    if (m_dynamixel.m_data[0x0A] & 0x02 == 0x02) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+bool X106::reverseMode() {
+    m_dynamixel.read(0x0A, 1);
+    if (m_dynamixel.m_data[0x0A] & 0x01 == 0x01) {
+        return true;
+    }
+    else {
+        return false;
+    }
 }
