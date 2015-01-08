@@ -37,15 +37,15 @@ public:
             );
 	word multiTurnOffset();
 	word resolutionDivider();
-    unsigned int D();
-    unsigned int I();
-    unsigned int P();
-    unsigned int goalAcceleration();
+    word D();
+    word I();
+    word P();
+    word goalAcceleration();
 
-    void setD(const unsigned int&);
-    void setI(const unsigned int&);
-    void setP(const unsigned int&);
-    void setGoalAcceleration(const unsigned int&);
+    void setD(const word&);
+    void setI(const word&);
+    void setP(const word&);
+    void setGoalAcceleration(const word&);
 
 };
 
