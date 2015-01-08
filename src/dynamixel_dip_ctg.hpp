@@ -35,6 +35,14 @@ public:
             const float& stopAngle, const word& startGap, const word& stopGap,
             const float& resolutionD, const float& resolutionR
             );
+
+    word current();
+    bool torqueControlMode();
+    word goalTorque();
+
+    void setCurrent(const word& current);
+    void setTorqueControlMode(const bool& mode);
+    void setGoalTorque(const word& torque);
 };
 
 }  // namespace Dynamixel

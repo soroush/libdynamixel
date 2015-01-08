@@ -37,3 +37,44 @@ Dynamixel_DIP_CTG::Dynamixel_DIP_CTG(SerialStream& serial, const word& id,
         Dynamixel_DIP { serial, id, steps, maxSpeed, startAngle, stopAngle,
                 startGap, stopGap, resolutionD, resolutionR } {
 }
+
+word Dynamixel_DIP_CTG::current() {
+    this->read(0x44, 2);
+    word current = ((static_cast<word>(this->m_data[0x45]) & 0x00FF) << 8)
+            | (static_cast<word>(this->m_data[0x44]) & 0x00FF);
+    return current;
+}
+
+bool Dynamixel_DIP_CTG::torqueControlMode() {
+    this->read(0x46, 1);
+    if (this->m_data[0x46] == 1) {
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+word Dynamixel_DIP_CTG::goalTorque() {
+    this->read(0x47, 2);
+    word torque = ((static_cast<word>(this->m_data[0x48]) & 0x00FF) << 8)
+            | (static_cast<word>(this->m_data[0x47]) & 0x00FF);
+    return torque;
+}
+
+void Dynamixel_DIP_CTG::setCurrent(const word& current) {
+    Buffer packet = { // L-H
+            static_cast<byte>(current & 0x00FF), static_cast<byte>(current >> 8), };
+    this->write(packet, 0x44);
+}
+
+void Dynamixel_DIP_CTG::setTorqueControlMode(const bool& mode) {
+    Buffer packet = { static_cast<byte>(mode ? 0x01 : 0x00) };
+    this->write(packet, 0x46);
+}
+
+void Dynamixel_DIP_CTG::setGoalTorque(const word& torque) {
+    Buffer packet = { // L-H
+            static_cast<byte>(torque & 0x00FF), static_cast<byte>(torque >> 8), };
+    this->write(packet, 0x47);
+}
