@@ -143,9 +143,11 @@ public:
 protected:
     void addChecksum(Buffer&);
     bool checkChecksum(const Buffer&);
+    void handleError(const byte& errorCode);
     LibSerial::SerialStream &m_serial;
     byte m_data[74];
     word m_id;
+    byte& m_statusReturnLevel;
     word m_steps;
     word m_maxSpeed;
     float m_startAngle;
@@ -154,6 +156,13 @@ protected:
     word m_stopGap;
     float m_resolutionD;
     float m_resolutionR;
+    bool m_voltageError;
+    bool m_angleError;
+    bool m_temperatureError;
+    bool m_rangeError;
+    bool m_checksumError;
+    bool m_loadError;
+    bool m_instructionError;
 };
 
 }  // namespace Dynamixel

@@ -21,11 +21,11 @@
  */
 
 #include "dynamixel_base.hpp"
-#include <stdexcept>
-#include <unistd.h>
-#ifdef VERBOSE
+
 #include <iostream>
-#endif
+#include <stdexcept>
+
+//#endif
 
 using namespace std;
 using namespace Dynamixel;
@@ -33,7 +33,8 @@ using namespace LibSerial;
 
 DynamixelBase::DynamixelBase(SerialStream& serial, const word& id) :
         m_serial(serial),
-        m_id { id } {
+        m_id { id },
+        m_statusReturnLevel { m_data[0x10] } {
     m_data[3] = this->m_id;
 }
 
@@ -43,6 +44,7 @@ DynamixelBase::DynamixelBase(SerialStream& serial, const word& id,
         const float& resolutionD, const float& resolutionR) :
         m_serial(serial),
         m_id { id },
+        m_statusReturnLevel { m_data[0x10] },
         m_steps { steps },
         m_maxSpeed { maxSpeed },
         m_startAngle { startAngle },
@@ -50,7 +52,14 @@ DynamixelBase::DynamixelBase(SerialStream& serial, const word& id,
         m_startGap { startGap },
         m_stopGap { stopGap },
         m_resolutionD { resolutionD },
-        m_resolutionR { resolutionR } {
+        m_resolutionR { resolutionR },
+        m_voltageError { false },
+        m_angleError { false },
+        m_temperatureError { false },
+        m_rangeError { false },
+        m_checksumError { false },
+        m_loadError { false },
+        m_instructionError { false } {
     m_data[3] = this->m_id;
 }
 
@@ -71,31 +80,38 @@ void DynamixelBase::read(const size_t& start, const size_t& length) {
     cout << endl;
 #endif
     byte statusPacketBuffer[6 + length];
-    m_serial.read(statusPacketBuffer, 6 + length);
-    Buffer statusPacket { statusPacketBuffer, statusPacketBuffer + 6 + length };
+    if (m_statusReturnLevel > 0) {
+        m_serial.read(statusPacketBuffer, 6 + length);
+        Buffer statusPacket { statusPacketBuffer, statusPacketBuffer + 6
+                + length };
 #ifdef VERBOSE
-    cout << "RREAD : ";
-    for (int i = 0; i < 6 + length; ++i) {
-        cout << hex << static_cast<int>(statusPacket[i] & 0x00FF) << ' ';
-    }
-    cout << endl;
+        cout << "RREAD : ";
+        for (int i = 0; i < 6 + length; ++i) {
+            cout << hex << static_cast<int>(statusPacket[i] & 0x00FF) << ' ';
+        }
+        cout << endl;
 #endif
-    if (static_cast<int>(statusPacket[4]) == 0x00) {
-        if (checkChecksum(statusPacket)) {
-            for (byte index = start, sindex = 5; index < start + length;
-                    ++index, ++sindex) {
-                m_data[index] = statusPacket[sindex];
+        if (static_cast<int>(statusPacket[4]) == 0x00) {
+            if (checkChecksum(statusPacket)) {
+                for (byte index = start, sindex = 5; index < start + length;
+                        ++index, ++sindex) {
+                    m_data[index] = statusPacket[sindex];
+                }
+                m_voltageError = false;
+                m_angleError = false;
+                m_temperatureError = false;
+                m_rangeError = false;
+                m_checksumError = false;
+                m_loadError = false;
+                m_instructionError = false;
+            }
+            else {
+                cerr << "Returning packet has invalid checksum." << endl;
             }
         }
         else {
-            throw runtime_error {
-                    "Checksum error detected on returned packet. Terminating..." };
+            handleError(statusPacket[4]);
         }
-    }
-    else {
-        // TODO: Handle error code
-        throw runtime_error {
-                "Motor error detected on returned packet. Terminating..." };
     }
 }
 
@@ -122,22 +138,23 @@ void DynamixelBase::write(const Buffer& data, const size_t& start) {
     cout << endl;
 #endif
     m_serial.write(packet.data(), packet.size());
-    // Read status packet
-    byte statusPacketBuffer[6];
-    m_serial.read(statusPacketBuffer, 6);
-    Buffer statusPacket { statusPacketBuffer, statusPacketBuffer + 6 };
+    if (m_statusReturnLevel == 0x02) {
+        byte statusPacketBuffer[6];
+        m_serial.read(statusPacketBuffer, 6);
+        Buffer statusPacket { statusPacketBuffer, statusPacketBuffer + 6 };
 #ifdef VERBOSE
-    cout << "WREAD : ";
-    for (int i = 0; i < 6; ++i) {
-        cout << hex << (static_cast<int>(statusPacket[i]) & 0x00FF) << ' ';
-    }
-    cout << endl;
+        cout << "WREAD : ";
+        for (int i = 0; i < 6; ++i) {
+            cout << hex << (static_cast<int>(statusPacket[i]) & 0x00FF) << ' ';
+        }
+        cout << endl;
 #endif
-    if (statusPacket[4] != 0x00) {
-        // TODO: Handle response error
-    }
-    else if (!checkChecksum(statusPacket)) {
-        // TODO: Handle checksum error
+        if (statusPacket[4] != 0x00) {
+            handleError(statusPacket[4]);
+        }
+        else if (!checkChecksum(statusPacket)) {
+            // TODO: Handle checksum error
+        }
     }
 }
 
@@ -273,6 +290,9 @@ word DynamixelBase::maxTorque() {
 }
 
 word DynamixelBase::statusReturnLevel() {
+    this->read(0x10, 1);
+    word level = static_cast<word>(this->m_data[0x10]) & 0x00FF;
+    return level;
 }
 
 word DynamixelBase::alarmLED() {
@@ -583,4 +603,42 @@ bool DynamixelBase::checkChecksum(const Buffer& input) {
     }
     byte low = ~(static_cast<byte>(sum));
     return low == input[length - 1];
+}
+
+void DynamixelBase::handleError(const byte& errorCode) {
+    m_voltageError = false;
+    m_angleError = false;
+    m_temperatureError = false;
+    m_rangeError = false;
+    m_checksumError = false;
+    m_loadError = false;
+    m_instructionError = false;
+    if ((errorCode & 0x01) == 0x01) {
+        cerr << "Input voltage is out of range." << endl;
+        m_voltageError = true;
+    }
+    if ((errorCode & 0x02) == 0x02) {
+        cerr << "Goal position is out of range." << endl;
+        m_angleError = true;
+    }
+    if ((errorCode & 0x04) == 0x04) {
+        cerr << "Temperature is out of range." << endl;
+        m_temperatureError = true;
+    }
+    if ((errorCode & 0x08) == 0x08) {
+        cerr << "Range is invalid." << endl;
+        m_rangeError = true;
+    }
+    if ((errorCode & 0x10) == 0x10) {
+        cerr << "Checksum is invalid." << endl;
+        m_checksumError = true;
+    }
+    if ((errorCode & 020) == 0x20) {
+        cerr << "Load is out of range." << endl;
+        m_loadError = true;
+    }
+    if ((errorCode & 040) == 0x40) {
+        cerr << "Instruction is out of range." << endl;
+        m_instructionError = true;
+    }
 }
