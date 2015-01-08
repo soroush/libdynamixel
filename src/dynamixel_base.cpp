@@ -58,8 +58,9 @@ DynamixelBase::~DynamixelBase() {
 }
 
 void DynamixelBase::read(const size_t& start, const size_t& length) {
-    Buffer packet = { 0xFF, 0xFF, this->m_data[3], 0x04, 0x02, //
-            static_cast<char>(start), static_cast<char>(length), 0x00 };
+    Buffer packet = { static_cast<byte>(0xFF), static_cast<byte>(0xFF),
+            this->m_data[3], 0x04, 0x02, static_cast<byte>(start),
+            static_cast<byte>(length), 0x00 };
     addChecksum(packet);
     m_serial.write(packet.data(), packet.size());
 #ifdef VERBOSE
@@ -140,10 +141,67 @@ void DynamixelBase::write(const Buffer& data, const size_t& start) {
     }
 }
 
-word DynamixelBase::model() {
+word DynamixelBase::modelNumber() {
     this->read(0x00, 2);
     word model = ((0x00FF & this->m_data[0x01]) << 8) | this->m_data[0x00];
     return model;
+}
+
+DynamixelBase::Model DynamixelBase::model() {
+    word number = this->modelNumber();
+    Model model;
+    switch (number) {
+    case 113:
+        return Model::DX113;
+        break;
+    case 116:
+        return Model::DX116;
+        break;
+    case 117:
+        return Model::DX117;
+        break;
+    case 44:
+        return Model::AX12W;
+        break;
+    case 12:
+        return Model::AX12;
+        break;
+    case 18:
+        return Model::AX18F;
+        break;
+    case 10:
+        return Model::RX10;
+        break;
+    case 24:
+        return Model::RX24F;
+        break;
+    case 28:
+        return Model::RX28;
+        break;
+    case 64:
+        return Model::RX64;
+        break;
+    case 107:
+        return Model::EX106PLUS;
+        break;
+    case 104:
+        return Model::MX12W;
+        break;
+    case 29:
+        return Model::MX28;
+        break;
+    case 54:
+        return Model::MX64;
+        break;
+    case 320:
+        return Model::MX106;
+        break;
+    case 350:
+        return Model::XL320;
+        break;
+    default:
+        return Model::Unknown;
+    }
 }
 
 word DynamixelBase::firmware() {
@@ -157,8 +215,8 @@ word DynamixelBase::id() {
 }
 
 void DynamixelBase::setId(const byte& id) {
-    const byte data[1] = { id };
-//	this->write(data, 1, 0x03);
+    Buffer data = { id };
+    this->write(data, 0x03);
     this->m_data[3] = id;
     this->m_id = id;
 }
@@ -365,8 +423,7 @@ void DynamixelBase::setTorqueLimit(const word& limit) {
 }
 
 void DynamixelBase::setLock(const bool& locked) {
-    Buffer packet = { //
-            locked ? 0x01 : 0x00, };
+    Buffer packet = { static_cast<byte>(locked ? 0x01 : 0x00) };
     this->write(packet, 0x2F);
 }
 
