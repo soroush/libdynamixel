@@ -77,8 +77,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-check_PROGRAMS = mx28_test$(EXEEXT)
-TESTS = mx28_test$(EXEEXT)
+check_PROGRAMS = ax12_test$(EXEEXT)
+TESTS = ax12_test$(EXEEXT)
 subdir = test
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp $(top_srcdir)/test-driver
@@ -93,10 +93,10 @@ mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
-am_mx28_test_OBJECTS = mx28.$(OBJEXT)
-mx28_test_OBJECTS = $(am_mx28_test_OBJECTS)
+am_ax12_test_OBJECTS = ax12.$(OBJEXT)
+ax12_test_OBJECTS = $(am_ax12_test_OBJECTS)
 am__DEPENDENCIES_1 =
-mx28_test_DEPENDENCIES = $(am__DEPENDENCIES_1) ../src/libdynamixel.la
+ax12_test_DEPENDENCIES = $(am__DEPENDENCIES_1) ../src/libdynamixel.la
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
 am__v_lt_0 = --silent
@@ -135,8 +135,8 @@ AM_V_CXXLD = $(am__v_CXXLD_@AM_V@)
 am__v_CXXLD_ = $(am__v_CXXLD_@AM_DEFAULT_V@)
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(mx28_test_SOURCES)
-DIST_SOURCES = $(mx28_test_SOURCES)
+SOURCES = $(ax12_test_SOURCES)
+DIST_SOURCES = $(ax12_test_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -493,8 +493,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CPPFLAGS = -I$(srcdir)/.. $(OTHER_CPPFLAGS)
-mx28_test_SOURCES = mx28.cpp
-mx28_test_LDADD = $(LIBSERIAL_LIBS) ../src/libdynamixel.la
+#mx28_test 
+ax12_test_SOURCES = ax12.cpp
+ax12_test_LDADD = $(LIBSERIAL_LIBS) ../src/libdynamixel.la
 all: all-am
 
 .SUFFIXES:
@@ -539,9 +540,9 @@ clean-checkPROGRAMS:
 	echo " rm -f" $$list; \
 	rm -f $$list
 
-mx28_test$(EXEEXT): $(mx28_test_OBJECTS) $(mx28_test_DEPENDENCIES) $(EXTRA_mx28_test_DEPENDENCIES) 
-	@rm -f mx28_test$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(mx28_test_OBJECTS) $(mx28_test_LDADD) $(LIBS)
+ax12_test$(EXEEXT): $(ax12_test_OBJECTS) $(ax12_test_DEPENDENCIES) $(EXTRA_ax12_test_DEPENDENCIES) 
+	@rm -f ax12_test$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(ax12_test_OBJECTS) $(ax12_test_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -549,7 +550,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mx28.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ax12.Po@am__quote@
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
@@ -771,9 +772,9 @@ recheck: all $(check_PROGRAMS)
 	        am__force_recheck=am--force-recheck \
 	        TEST_LOGS="$$log_list"; \
 	exit $$?
-mx28_test.log: mx28_test$(EXEEXT)
-	@p='mx28_test$(EXEEXT)'; \
-	b='mx28_test'; \
+ax12_test.log: ax12_test$(EXEEXT)
+	@p='ax12_test$(EXEEXT)'; \
+	b='ax12_test'; \
 	$(am__check_pre) $(LOG_DRIVER) --test-name "$$f" \
 	--log-file $$b.log --trs-file $$b.trs \
 	$(am__common_driver_flags) $(AM_LOG_DRIVER_FLAGS) $(LOG_DRIVER_FLAGS) -- $(LOG_COMPILE) \
@@ -949,6 +950,7 @@ uninstall-am:
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	recheck tags tags-am uninstall uninstall-am
 
+# mx28_test 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

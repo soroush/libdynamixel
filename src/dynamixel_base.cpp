@@ -25,8 +25,6 @@
 #include <iostream>
 #include <stdexcept>
 
-//#endif
-
 using namespace std;
 using namespace Dynamixel;
 using namespace LibSerial;
@@ -36,6 +34,7 @@ DynamixelBase::DynamixelBase(SerialStream& serial, const word& id) :
         m_id { id },
         m_statusReturnLevel { m_data[0x10] } {
     m_data[3] = this->m_id;
+    m_statusReturnLevel = 0x02;
 }
 
 DynamixelBase::DynamixelBase(SerialStream& serial, const word& id,
@@ -61,6 +60,7 @@ DynamixelBase::DynamixelBase(SerialStream& serial, const word& id,
         m_loadError { false },
         m_instructionError { false } {
     m_data[3] = this->m_id;
+    m_statusReturnLevel = 0x02;
 }
 
 DynamixelBase::~DynamixelBase() {
@@ -389,7 +389,7 @@ bool DynamixelBase::registered() {
 
 bool DynamixelBase::moving() {
     this->read(0x2E, 1);
-    if (this->m_data[0x2E] == 1) {
+    if (this->m_data[0x2E] == 0x01) {
         return true;
     }
     else {
