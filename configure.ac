@@ -1,4 +1,4 @@
-AC_INIT([libdynamixel], [0.1.0], [soroush@phemto-tech.com], [libdynamixel],
+AC_INIT([libdynamixel], [0.1.0], [soroush@ametisco.ir], [libdynamixel],
         [https://github.com/soroush/libdynamixel])
 AC_PREREQ([2.59])
 AM_INIT_AUTOMAKE([1.10 -Wall no-define])
@@ -7,7 +7,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS([config.h])
 AC_LANG([C++])
 AC_PROG_CXX
-AX_CXX_COMPILE_STDCXX_11()
+AX_CXX_COMPILE_STDCXX_11([noext], [mandatory])
 AM_PROG_AR
 AC_TYPE_SIZE_T
 AC_HEADER_STDBOOL
