@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,23 +20,8 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "../src/ax12.hpp"
-#include "../src/mx28.hpp"
-#include <unistd.h>
-#include <iostream>
-#include <SerialPort.h>
-#include <SerialStream.h>
-
-using namespace std;
-using namespace Dynamixel;
-using namespace LibSerial;
+#include "ax12.hpp"
 
 int main() {
-	SerialStream stream("/dev/ttyUSB0", SerialStreamBuf::BAUD_57600,
-			SerialStreamBuf::CHAR_SIZE_8, SerialStreamBuf::PARITY_NONE, 1,
-			SerialStreamBuf::FLOW_CONTROL_NONE);
-    stream.SetVMin(100);
-    stream.SetVTime(1);
-	MX28 m1 { stream, 1 };
-	m1.setGoalPositionSpeed(2048,30);
+    dynamixel::ax12 a1{1};
 }

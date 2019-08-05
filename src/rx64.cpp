@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,11 +22,8 @@
 
 #include "rx64.hpp"
 
-using namespace std;
-using namespace Dynamixel;
-using namespace LibSerial;
-
-RX64::RX64(SerialStream& serial, const word& id) :
-        Dynamixel_CMS { serial, id, 1023, 1023, 30.0, 330.0, 102, 102,
-                3.41333333333, 195.569594071 } {
+dynamixel::rx64::rx64(const uint8_t id) :
+    dynamixel::cms { id, 1023, 1023,
+                     30.0, 330.0, 102, 102,
+                     3.41333333333, 195.569594071 } {
 }

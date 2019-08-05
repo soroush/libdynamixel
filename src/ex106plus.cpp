@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public

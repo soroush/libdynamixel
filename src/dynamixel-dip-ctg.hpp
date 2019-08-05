@@ -20,24 +20,36 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBDYNAMIXEL_DX113_HPP
-#define LIBDYNAMIXEL_DX113_HPP
+#ifndef LIBDYNAMIXEL_DYNAMIXEL_DIP_CTG_HPP
+#define LIBDYNAMIXEL_DYNAMIXEL_DIP_CTG_HPP
 
 #include <cstdint>
-#include "dynamixel-cms.hpp"
+#include "dynamixel-dip.hpp"
 
 namespace dynamixel {
 
-class dx113: public cms {
+class dip_ctg: virtual public dip {
 public:
-    dx113(const uint8_t id);
-    dx113(const dx113&) = default;
-    dx113(dx113&&) = default;
-    dx113& operator=(const dx113&) = default;
-    dx113& operator=(dx113&&) = default;
-    ~dx113() = default;
+    dip_ctg(const uint8_t id);
+    dip_ctg(const uint8_t id, const uint16_t steps,
+            const uint16_t max_speed,
+            const float start_angle, const float stop_angle,
+            const uint16_t start_gap, const uint16_t stop_gap,
+            const float resolution_d, const float resolution_r);
+    dip_ctg(const dip_ctg&) = default;
+    dip_ctg(dip_ctg&&) = default;
+    dip_ctg& operator=(const dip_ctg&) = default;
+    dip_ctg& operator=(dip_ctg&&);
+    virtual ~dip_ctg() = default;
+
+    uint16_t current();
+    bool torque_control_mode();
+    uint16_t goal_torque();
+    void set_current(const uint16_t current);
+    void set_torque_control_mode(const bool mode);
+    void set_goal_torque(const uint16_t torque);
 };
 
 }  // namespace dynamixel
 
-#endif // LIBDYNAMIXEL_DX113_HPP
+#endif // LIBDYNAMIXEL_DYNAMIXEL_DIP_CTG_HPP

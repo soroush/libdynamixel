@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,18 +20,24 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MX64_HPP_
-#define MX64_HPP_
+#ifndef LIBDYNAMIXEL_MX64_HPP
+#define LIBDYNAMIXEL_MX64_HPP
 
-#include "dynamixel_dip_ctg.hpp"
+#include <cstdint>
+#include "dynamixel-dip-ctg.hpp"
 
-namespace Dynamixel {
+namespace dynamixel {
 
-class MX64: public Dynamixel_DIP_CTG {
+class mx64: public dynamixel::dip_ctg {
 public:
-	MX64(LibSerial::SerialStream&, const word& id);
+    mx64(const uint8_t id);
+    mx64(const mx64&) = default;
+    mx64(mx64&&) = default;
+    mx64& operator=(const mx64&) = default;
+    mx64& operator=(mx64&&) = default;
+    ~mx64() = default;
 };
 
-}  // namespace Dynamixel
+}  // namespace dynamixel
 
-#endif /* MX64_HPP_ */
+#endif // LIBDYNAMIXEL_MX64_HPP

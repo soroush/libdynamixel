@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -25,13 +25,16 @@
 
 #define _USE_MATH_DEFINES
 
-using namespace std;
-using namespace Dynamixel;
-using namespace LibSerial;
-
-MX106::MX106(SerialStream& serial, const word& id) :
-        Dynamixel_DIP_CTG { serial, id, 4095, 1023, 0.0, 360.0, 0, 0, 4096.0
-                / 360.0, 4096.0 / 2 * M_PI }, X106(
-                static_cast<DynamixelBase&>(*this)) {
+dynamixel::mx106::mx106(const uint8_t id) :
+    dynamixel::base{id},
+    dynamixel::dip { id, 4095, 1023, 0.0,
+                     360.0, 0,
+                     0, 4096.0 / 360.0,
+                     4096.0 / 2 * M_PI },
+    dynamixel::dip_ctg { id, 4095, 1023, 0.0,
+                         360.0, 0,
+                         0, 4096.0 / 360.0,
+                         4096.0 / 2 * M_PI },
+    dynamixel::x106{id} {
 }
 

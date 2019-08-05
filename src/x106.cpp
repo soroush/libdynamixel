@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -22,31 +22,29 @@
 
 #include "x106.hpp"
 
-using namespace std;
-using namespace Dynamixel;
-using namespace LibSerial;
-
-X106::X106(DynamixelBase& dxl) :
-        m_dynamixel(dxl) {
+dynamixel::x106::x106(const uint8_t id) :
+    dynamixel::base{id} {
 }
 
-void X106::setMasterMode(const bool& isMaster) {
-    m_dynamixel.read(0x0A, 1);
-    Buffer newMode = { static_cast<byte>(m_dynamixel.m_data[0x0A] |
-            (isMaster ? byte{0x02} : byte{0x00})) };
-    m_dynamixel.write(newMode,0x0A);
+void dynamixel::x106::set_master_mode(bool is_master) {
+    read_mem(0x0A, 1);
+    uint8_t new_mode[] = {
+        static_cast<uint8_t>(m_data[0x0A] | (is_master ? 0x02 : 0x00)),
+    };
+    write_mem(new_mode, 0x01, 0x0A);
 }
 
-void X106::setReverseMode(const bool& isReverse) {
-    m_dynamixel.read(0x0A, 1);
-    Buffer newMode = { static_cast<byte>(m_dynamixel.m_data[0x0A] |
-            (isReverse ? byte{0x01} : byte{0x00})) };
-    m_dynamixel.write(newMode,0x0A);
+void dynamixel::x106::set_reverse_mode(bool is_reverse) {
+    read_mem(0x0A, 1);
+    uint8_t new_mode[] = {
+        static_cast<uint8_t>(m_data[0x0A] | (is_reverse ? 0x01 : 0x00)),
+    };
+    write_mem(new_mode, 0x01, 0x0A);
 }
 
-bool X106::masterMode() {
-    m_dynamixel.read(0x0A, 1);
-    if (m_dynamixel.m_data[0x0A] & 0x02 == 0x02) {
+bool dynamixel::x106::master_mode() {
+    read_mem(0x0A, 1);
+    if ((m_data[0x0A] & 0x02) == 0x02) {
         return true;
     }
     else {
@@ -54,9 +52,9 @@ bool X106::masterMode() {
     }
 }
 
-bool X106::reverseMode() {
-    m_dynamixel.read(0x0A, 1);
-    if (m_dynamixel.m_data[0x0A] & 0x01 == 0x01) {
+bool dynamixel::x106::reverse_mode() {
+    read_mem(0x0A, 1);
+    if ((m_data[0x0A] & 0x01) == 0x01) {
         return true;
     }
     else {

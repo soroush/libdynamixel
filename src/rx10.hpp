@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,18 +20,24 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef RX10_HPP_
-#define RX10_HPP_
+#ifndef LIBDYNAMIXEL_RX10_HPP
+#define LIBDYNAMIXEL_RX10_HPP
 
-#include "dynamixel_cms.hpp"
+#include <cstdint>
+#include "dynamixel-cms.hpp"
 
-namespace Dynamixel {
+namespace dynamixel {
 
-class RX10: public Dynamixel_CMS {
+class rx10: public dynamixel::cms {
 public:
-    RX10(LibSerial::SerialStream&, const word& id);
+    rx10(const uint8_t id);
+    rx10(const rx10&) = default;
+    rx10(rx10&&) = default;
+    rx10& operator=(const rx10&) = default;
+    rx10& operator=(rx10&&) = default;
+    ~rx10() = default;
 };
 
-}  // namespace Dynamixel
+}  // namespace dynamixel
 
-#endif /* RX10_HPP_ */
+#endif // LIBDYNAMIXEL_RX10_HPP

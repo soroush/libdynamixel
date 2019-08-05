@@ -1,9 +1,29 @@
-AM_CPPFLAGS = -I$(srcdir)/.. $(OTHER_CPPFLAGS)
-check_PROGRAMS = ax12_test
-#mx28_test 
-ax12_test_SOURCES = ax12.cpp
-ax12_test_LDADD = $(LIBSERIAL_LIBS) ../src/libdynamixel.la
-#mx28_test_SOURCES = mx28.cpp
-#mx28_test_LDADD = $(LIBSERIAL_LIBS) ../src/libdynamixel.la
-TESTS = ax12_test
-# mx28_test 
+# libDynamixel, Dynamixel Servo Controller API
+#
+# Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
+#
+# libDynamixel is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Lesser General Public
+# License as published by the Free Software Foundation; either
+# version 2.1 of the License, or (at your option) any later version.
+# See the file COPYING included with this distribution for more
+# information.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public
+# License along with this library; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+AM_CPPFLAGS = -I$(top_srcdir)/src
+
+check_PROGRAMS = tst_ax12
+
+tst_ax12_SOURCES = tst-ax12.cpp
+
+tst_ax12_LDADD = ../src/libdynamixel.la
+
+TESTS = tst_ax12

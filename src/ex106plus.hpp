@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,21 +20,23 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef EX106PLUS_HPP_
-#define EX106PLUS_HPP_
+#ifndef DYNAMIXEL_EX106_PLUS_HPP
+#define DYNAMIXEL_EX106_PLUS_HPP
 
-#include "dynamixel_cms.hpp"
+#include <cstdint>
+#include "dynamixel-cms.hpp"
 #include "x106.hpp"
 
-namespace Dynamixel {
+namespace dynamixel {
 
-class EX106Plus: public Dynamixel_CMS, public X106 {
-public:
-	EX106Plus(LibSerial::SerialStream&, const unsigned int& id);
-	word sensedCurrent();
-	void setSensedCurrent(const unsigned int&);
-};
+// TODO: Implement
 
-}  // namespace Dynamixel
+// class ex106plus: public dynamixel::cms, public dynamixel::x106 {
+// public:
+//     ex106plus(const uint8_t id);
+//     uint16_t sensed_current();
+// };
 
-#endif /* EX106PLUS_HPP_ */
+}  // namespace dynamixel
+
+#endif // DYNAMIXEL_EX106_PLUS_HPP

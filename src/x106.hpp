@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,26 +20,29 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef X106_HPP_
-#define X106_HPP_
+#ifndef LIBDYNAMIXEL_X106_HPP
+#define LIBDYNAMIXEL_X106_HPP
 
-#include "dynamixel_base.hpp"
+#include "dynamixel-base.hpp"
+#include <cstdint>
 
-namespace Dynamixel {
+namespace dynamixel {
 
-class MX106;
-
-class X106 {
+class x106 : public dynamixel::base {
 public:
-	X106(DynamixelBase& dxl);
-	void setMasterMode(const bool& isMaster);
-	void setReverseMode(const bool& isReverse);
-	bool masterMode();
-	bool reverseMode();
-private:
-	DynamixelBase& m_dynamixel;
+    x106(const uint8_t id);
+    x106(const x106&) = default;
+    x106(x106&&) = default;
+    x106& operator=(const x106&) = default;
+    x106& operator=(x106&&) = default;
+    ~x106() = default;
+
+    void set_master_mode(bool is_master);
+    void set_reverse_mode(bool is_reverse);
+    bool master_mode();
+    bool reverse_mode();
 };
 
-}  // namespace Dynamixel
+}  // namespace dynamixel
 
-#endif /* X106_HPP_ */
+#endif // LIBDYNAMIXEL_X106_HPP

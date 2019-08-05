@@ -8,4 +8,4 @@ Description: Dynamixel controller library.
 Version: @PACKAGE_VERSION@
 URL: @PACKAGE_URL@
 Libs: -L${libdir} -ldynamixel
-Cflags: -I${includedir}/dynamixel -I${libdir}/dynamixel/include
+Cflags: -I${includedir}/dynamixel

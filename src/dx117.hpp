@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,18 +20,24 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef DX117_HPP_
-#define DX117_HPP_
+#ifndef LIBDYNAMIXEL_DX117_HPP
+#define LIBDYNAMIXEL_DX117_HPP
 
-#include "dynamixel_cms.hpp"
+#include <cstdint>
+#include "dynamixel-cms.hpp"
 
-namespace Dynamixel {
+namespace dynamixel {
 
-class DX117: public Dynamixel_CMS {
+class dx117: public dynamixel::cms {
 public:
-	DX117(LibSerial::SerialStream&, const word& id);
+    dx117(const uint8_t id);
+    dx117(const dx117&) = default;
+    dx117(dx117&&) = default;
+    dx117& operator=(const dx117&) = default;
+    dx117& operator=(dx117&&) = default;
+    ~dx117() = default;
 };
 
-}  // namespace Dynamixel
+}  // namespace dynamixel
 
-#endif /* DX117_HPP_ */
+#endif // LIBDYNAMIXEL_DX117_HPP

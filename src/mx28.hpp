@@ -1,7 +1,7 @@
 /*
  libDynamixel, Dynamixel Servo Controller API
 
- Copyright 2014 Soroush Rabiei <soroush@phemto-tech.com>
+ Copyright 2014-2019 Soroush Rabiei <soroush@ametisco.ir>
 
  libDynamixel is free software; you can redistribute it and/or
  modify it under the terms of the GNU Lesser General Public
@@ -20,17 +20,24 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef MX28_HPP_
-#define MX28_HPP_
+#ifndef LIBDYNAMIXEL_MX28_HPP
+#define LIBDYNAMIXEL_MX28_HPP
 
-#include "dynamixel_dip.hpp"
+#include <cstdint>
+#include "dynamixel-dip.hpp"
 
-namespace Dynamixel {
+namespace dynamixel {
 
-class MX28: public Dynamixel_DIP {
+class mx28: public dynamixel::dip {
 public:
-    MX28(LibSerial::SerialStream&, const word& id);
+    mx28(const uint8_t id);
+    mx28(const mx28&) = default;
+    mx28(mx28&&) = default;
+    mx28& operator=(const mx28&) = default;
+    mx28& operator=(mx28&&) = default;
+    ~mx28() = default;
 };
 
-}  // namespace Dynamixel
-#endif /* MX28_HPP_ */
+}  // namespace dynamixel
+
+#endif // LIBDYNAMIXEL_MX28_HPP
