@@ -78,7 +78,7 @@ public:
     base& operator=(base&& other);
     virtual ~base();
     // Low level API layer
-    void read_mem(const std::size_t, const std::size_t);
+    void read_mem(const std::size_t start, const std::size_t size);
     void write_mem(const uint8_t* data, const size_t size, const size_t start);
     // | High level API layer
     // |--- Readers

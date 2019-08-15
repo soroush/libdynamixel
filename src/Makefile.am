@@ -19,11 +19,14 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 ACLOCAL_AMFLAGS = ${ACLOCAL_FLAGS} -I m4
-AM_CPPFLAGS = --pedantic -Wall -Werror
+AM_CPPFLAGS = \
+    --pedantic -Wall -Werror \
+    $(PTHREAD_CFLAGS)
 
 lib_LTLIBRARIES = libdynamixel.la
 
 libdynamixel_la_SOURCES = \
+    communicator.cpp \
     dynamixel-base.cpp \
     dynamixel-cms.cpp \
     dynamixel-dip.cpp \
@@ -45,8 +48,12 @@ libdynamixel_la_SOURCES = \
 
 libdynamixel_la_LDFLAGS = -version-info $(DYNAMIXEL_SO_VERSION)
 
+libdynamixel_la_LIBADD = \
+    $(PTHREAD_LIBS)
+
 dynamixel_includedir = $(includedir)/dynamixel
 dynamixel_include_HEADERS = \
+    communicator.hpp \
     dynamixel-base.hpp \
     dynamixel-cms.hpp \
     dynamixel-dip.hpp \

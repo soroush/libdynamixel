@@ -52,6 +52,18 @@ AC_TYPE_SIZE_T
 AC_TYPE_UINT16_T
 AC_TYPE_UINT8_T
 
+# Build settings
+AC_ARG_ENABLE([multi-thread],
+    AS_HELP_STRING([--enable-multi-thread],
+                   [Enable use of library within multiple threads]))
+
+AS_IF([test "x$enable_multi_thread" != "xno"],
+      [AX_PTHREAD()])
+
+AS_IF([test "x$enable_multi_thread" != "xno"],
+      [AC_DEFINE([HAVE_MULTITHREAD], [1],
+      [Define if multi-thread support is enabled.])])
+
 AC_SUBST([DYNAMIXEL_SO_VERSION], [1:0:0])
 AC_SUBST([DYNAMIXEL_API_VERSION], [0.1.1])
 
