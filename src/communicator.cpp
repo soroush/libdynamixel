@@ -21,35 +21,12 @@
  */
 
 #include "communicator.hpp"
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#ifdef HAVE_MULTITHREAD
-#include <mutex>
-#endif
-#endif
+#include "details/io-lock.hpp"
 #include <errno.h>
 #include <fcntl.h>
 #include <string.h>
 #include <termios.h>
 #include <unistd.h>
-
-struct io_lock {
-public:
-    #ifdef HAVE_MULTITHREAD
-    io_lock() :
-        m_io_guard{m_lock} {
-    }
-    #else
-    io_lock() = default;
-    #endif
-    io_lock(const io_lock&) = delete;
-    ~io_lock() = default;
-private:
-    #ifdef HAVE_MULTITHREAD
-    std::mutex m_lock;
-    std::lock_guard<std::mutex> m_io_guard;
-    #endif
-};
 
 dynamixel::communicator::communicator(const std::string& port, const int baudrate) :
     m_fd{0} {
@@ -99,4 +76,11 @@ void dynamixel::communicator::open_port(const std::string& port, const int baudr
 void dynamixel::communicator::close_port() {
     close(m_fd);
     m_fd = -1;
+}
+
+void dynamixel::communicator::mem_io(const uint8_t* data, const size_t wsize,
+                                     uint8_t* rdata, const std::size_t rsize,
+                                     bool half_duplex) {
+    dynamixel::details::io_lock_guard guard(*m_lock);
+    // TODO: Perform actual read and write
 }

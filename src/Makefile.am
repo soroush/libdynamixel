@@ -72,3 +72,7 @@ dynamixel_include_HEADERS = \
     mx64.hpp \
     mx106.hpp \
     ex106plus.hpp
+
+noinst_dynamixel_includedir = $(includedir)/dynamixel/details
+noinst_dynamixel_include_HEADERS = \
+    details/io-lock.hpp

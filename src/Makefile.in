@@ -120,7 +120,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cxx_compile_stdcxx.m4 \
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(dynamixel_include_HEADERS) \
-	$(am__DIST_COMMON)
+	$(noinst_dynamixel_include_HEADERS) $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
@@ -153,7 +153,8 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(libdir)" \
-	"$(DESTDIR)$(dynamixel_includedir)"
+	"$(DESTDIR)$(dynamixel_includedir)" \
+	"$(DESTDIR)$(noinst_dynamixel_includedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
 libdynamixel_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -221,7 +222,8 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
-HEADERS = $(dynamixel_include_HEADERS)
+HEADERS = $(dynamixel_include_HEADERS) \
+	$(noinst_dynamixel_include_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -424,6 +426,10 @@ dynamixel_include_HEADERS = \
     mx106.hpp \
     ex106plus.hpp
 
+noinst_dynamixel_includedir = $(includedir)/dynamixel/details
+noinst_dynamixel_include_HEADERS = \
+    details/io-lock.hpp
+
 all: all-am
 
 .SUFFIXES:
@@ -575,6 +581,27 @@ uninstall-dynamixel_includeHEADERS:
 	@list='$(dynamixel_include_HEADERS)'; test -n "$(dynamixel_includedir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(dynamixel_includedir)'; $(am__uninstall_files_from_dir)
+install-noinst_dynamixel_includeHEADERS: $(noinst_dynamixel_include_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(noinst_dynamixel_include_HEADERS)'; test -n "$(noinst_dynamixel_includedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(noinst_dynamixel_includedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(noinst_dynamixel_includedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(noinst_dynamixel_includedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(noinst_dynamixel_includedir)" || exit $$?; \
+	done
+
+uninstall-noinst_dynamixel_includeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(noinst_dynamixel_include_HEADERS)'; test -n "$(noinst_dynamixel_includedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(noinst_dynamixel_includedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -665,7 +692,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(dynamixel_includedir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(dynamixel_includedir)" "$(DESTDIR)$(noinst_dynamixel_includedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -739,7 +766,8 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dynamixel_includeHEADERS
+install-data-am: install-dynamixel_includeHEADERS \
+	install-noinst_dynamixel_includeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -804,7 +832,8 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-dynamixel_includeHEADERS \
-	uninstall-libLTLIBRARIES
+	uninstall-libLTLIBRARIES \
+	uninstall-noinst_dynamixel_includeHEADERS
 
 .MAKE: install-am install-strip
 
@@ -816,13 +845,15 @@ uninstall-am: uninstall-dynamixel_includeHEADERS \
 	install-data-am install-dvi install-dvi-am \
 	install-dynamixel_includeHEADERS install-exec install-exec-am \
 	install-html install-html-am install-info install-info-am \
-	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-libLTLIBRARIES install-man \
+	install-noinst_dynamixel_includeHEADERS install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
 	tags tags-am uninstall uninstall-am \
-	uninstall-dynamixel_includeHEADERS uninstall-libLTLIBRARIES
+	uninstall-dynamixel_includeHEADERS uninstall-libLTLIBRARIES \
+	uninstall-noinst_dynamixel_includeHEADERS
 
 .PRECIOUS: Makefile
 

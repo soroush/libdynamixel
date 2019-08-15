@@ -20,34 +20,40 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef LIBDYNAMIXEL_COMMUNICATOR_HPP
-#define LIBDYNAMIXEL_COMMUNICATOR_HPP
+#ifndef LIBDYNAMIXEL_IO_LOCK_HPP
+#define LIBDYNAMIXEL_IO_LOCK_HPP
 
-#include <string>
-#include <cstdint>
-#include <cstddef>
-#include <termios.h>
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#ifdef HAVE_MULTITHREAD
+#include <mutex>
+#endif
+#endif
 
 namespace dynamixel {
 namespace details {
-struct io_lock;
-}
-}
 
-namespace dynamixel {
-class communicator {
+struct io_lock {
+    #ifdef HAVE_MULTITHREAD
+    std::mutex m_lock;
+    #endif
+};
+
+class io_lock_guard {
+    #ifdef HAVE_MULTITHREAD
 public:
-    communicator(const std::string& port = "", const int baudrate = B115200);
-    ~communicator();
-    void open_port(const std::string& port = "", const int baudrate = B115200);
-    void close_port();
-    void mem_io(const uint8_t* data, const size_t wsize,
-                uint8_t* rdata, const std::size_t rsize,
-                bool half_duplex = false);
+    io_lock_guard(io_lock& lck)
+        : m_guard {lck.m_lock} {
+    }
 private:
-    int m_fd;
-    details::io_lock* m_lock;
+    std::lock_guard<std::mutex> m_guard;
+    #else
+public:
+    io_lock_guard(io_lock&) {
+    };
+    #endif
 };
 }
+}
 
-#endif // LIBDYNAMIXEL_COMMUNICATOR_HPP
+#endif // LIBDYNAMIXEL_IO_LOCK_HPP
