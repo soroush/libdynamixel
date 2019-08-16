@@ -23,6 +23,7 @@
 #include "ax12.hpp"
 
 dynamixel::ax12::ax12(const uint8_t id) :
-        dynamixel::cms {id, 1023, 1023, 30.0, 330.0, 102, 102,
-                3.41333333333, 195.569594071 } {
+    dynamixel::cms {id, 1023, 1023, 30.0, 330.0, 102, 102,
+                    3.41333333333, 195.569594071 } {
+    m_is_half_duplex = true;
 }

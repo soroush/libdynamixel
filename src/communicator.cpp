@@ -28,6 +28,8 @@
 #include <termios.h>
 #include <unistd.h>
 
+#include <iostream>
+
 dynamixel::communicator::communicator(const std::string& port, const int baudrate) :
     m_fd{0} {
     open_port(port, baudrate);
@@ -78,9 +80,47 @@ void dynamixel::communicator::close_port() {
     m_fd = -1;
 }
 
-void dynamixel::communicator::mem_io(const uint8_t* data, const size_t wsize,
-                                     uint8_t* rdata, const std::size_t rsize,
-                                     bool half_duplex) {
+void dynamixel::communicator::raw_write_read(const uint8_t* data, const size_t wsize,
+        uint8_t* rdata, const std::size_t rsize,
+        bool half_duplex) {
     dynamixel::details::io_lock_guard guard(*m_lock);
-    // TODO: Perform actual read and write
+    if(half_duplex) {
+        uint8_t* echo = new uint8_t[wsize];
+        this->raw_write(data, wsize);
+        this->raw_read(echo, wsize);
+        // TODO : assert echo
+        if(::memcmp(echo, data, wsize) != 0) {
+            std::cerr << "Echo data differs!\n";
+        }
+        delete[] echo;
+    } else {
+        this->raw_write(data, wsize);
+    }
+    if(rdata) {
+        this->raw_read(rdata, rsize);
+    }
+}
+
+void dynamixel::communicator::raw_read(uint8_t* rdata, const size_t rsize) {
+    if(m_fd < 0) {
+        return;
+    }
+    size_t total = 0;
+    uint8_t* current = rdata;
+    while(total != rsize) {
+        std::size_t r = ::read(m_fd, current, rsize - total);
+        total = total + r;
+        current = current + r;
+    }
+}
+
+void dynamixel::communicator::raw_write(const uint8_t* data, const size_t wsize) {
+    if(m_fd < 0) {
+        return;
+    }
+    ssize_t wrote = ::write(m_fd, data, wsize);
+    if(wrote != static_cast<ssize_t>(wsize)) {
+        std::cerr << "Unable to write!\n";
+    }
+    ::tcflush(m_fd, TCIOFLUSH);
 }

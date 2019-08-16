@@ -41,9 +41,14 @@ public:
     ~communicator();
     void open_port(const std::string& port = "", const int baudrate = B115200);
     void close_port();
-    void mem_io(const uint8_t* data, const size_t wsize,
-                uint8_t* rdata, const std::size_t rsize,
-                bool half_duplex = false);
+    void raw_write_read(const uint8_t* data, const size_t wsize,
+                        uint8_t* rdata, const size_t rsize,
+                        bool half_duplex = false);
+
+private:
+    void raw_read(uint8_t* rdata, const size_t rsize);
+    void raw_write(const uint8_t* data, const size_t wsize);
+
 private:
     int m_fd;
     details::io_lock* m_lock;

@@ -25,6 +25,7 @@
 
 #include <cstdint>
 #include <cstddef>
+#include "communicator.hpp"
 
 namespace dynamixel {
 
@@ -129,6 +130,8 @@ public:
                 const angle_t a_unit = angle_t::degree);
     void rotate(const float rotation,
                 const angle_t aunit = angle_t::degree);
+    // Serial communication
+    void set_communicator(dynamixel::communicator* com);
 
 protected:
     void add_checksum(uint8_t* const buffer, const size_t length);
@@ -152,6 +155,9 @@ protected:
     bool m_checksum_error;
     bool m_load_error;
     bool m_instruction_error;
+    // Serial
+    bool m_is_half_duplex;
+    dynamixel::communicator* m_com;
 };
 
 }  // namespace dynamixel

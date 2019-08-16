@@ -21,7 +21,14 @@
  */
 
 #include "ax12.hpp"
+#include <cstdint>
+#include <iostream>
 
 int main() {
-    dynamixel::ax12 a1{1};
+    dynamixel::communicator c{"/dev/ttyUSB0", B115200};
+    dynamixel::ax12 a{5};
+    a.set_communicator(&c);
+    uint16_t model = a.model_number();
+    std::cout << model << '\n';
+    return 0;
 }

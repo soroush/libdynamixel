@@ -27,7 +27,9 @@
 #include <string.h>
 
 dynamixel::base::base(uint8_t id) :
-    m_id{id} {
+    m_id{id},
+    m_is_half_duplex{false},
+    m_com{nullptr} {
     m_data = new uint8_t[74];
     m_data[3] = this->m_id;
     m_status_return_level = 0x02;
@@ -53,7 +55,9 @@ dynamixel::base::base(uint8_t id, uint16_t steps,
     m_range_error { false },
     m_checksum_error { false },
     m_load_error { false },
-    m_instruction_error { false } {
+    m_instruction_error { false },
+    m_is_half_duplex {false},
+    m_com{nullptr} {
     m_data = new uint8_t[74];
     m_data[3] = this->m_id;
     m_status_return_level = 0x02;
@@ -79,6 +83,8 @@ dynamixel::base::base(const dynamixel::base& other) {
     m_checksum_error = other.m_checksum_error;
     m_load_error = other.m_load_error;
     m_instruction_error = other.m_instruction_error;
+    m_is_half_duplex = other.m_is_half_duplex;
+    m_com = other.m_com;
 }
 
 dynamixel::base::base(dynamixel::base&& other) {
@@ -101,6 +107,8 @@ dynamixel::base::base(dynamixel::base&& other) {
     m_checksum_error = other.m_checksum_error;
     m_load_error = other.m_load_error;
     m_instruction_error = other.m_instruction_error;
+    m_is_half_duplex = other.m_is_half_duplex;
+    m_com = other.m_com;
 }
 
 dynamixel::base& dynamixel::base::operator=(const dynamixel::base& other) {
@@ -125,6 +133,8 @@ dynamixel::base& dynamixel::base::operator=(const dynamixel::base& other) {
     m_checksum_error = other.m_checksum_error;
     m_load_error = other.m_load_error;
     m_instruction_error = other.m_instruction_error;
+    m_is_half_duplex = other.m_is_half_duplex;
+    m_com = other.m_com;
     return *this;
 }
 
@@ -152,6 +162,7 @@ dynamixel::base& dynamixel::base::operator=(base&& other) {
     m_checksum_error = other.m_checksum_error;
     m_load_error = other.m_load_error;
     m_instruction_error = other.m_instruction_error;
+    m_is_half_duplex = other.m_is_half_duplex;
     return *this;
 }
 
@@ -161,6 +172,9 @@ dynamixel::base::~base() {
 }
 
 void dynamixel::base::read_mem(const size_t start, const size_t length) {
+    if(!m_com) {
+        return;
+    }
     uint8_t packet[] = {
         uint8_t{0xFF},
         uint8_t{0xFF},
@@ -172,12 +186,12 @@ void dynamixel::base::read_mem(const size_t start, const size_t length) {
         0x00,
     };
     add_checksum(packet, 0x08);
-    // m_serial.write(packet.data(), packet.size());
-    uint8_t* status_packet = new uint8_t[6 + length];
-    if (m_status_return_level > 0) {
-        //     m_serial.read_mem(statusPacketBuffer, 6 + length);
-        if (status_packet[4] == 0x00) {
-            if (check_checksum(status_packet, 6 + length)) {
+    if(m_status_return_level > 0) {
+        size_t expected_status_size = 6 + length;
+        uint8_t* status_packet = new uint8_t[expected_status_size];
+        m_com->raw_write_read(packet, sizeof(packet), status_packet, expected_status_size, m_is_half_duplex);
+        if(status_packet[4] == 0x00) {
+            if(check_checksum(status_packet, expected_status_size)) {
                 ::memcpy(&status_packet[5], &m_data[start], length);
                 m_voltage_error = false;
                 m_angle_error = false;
@@ -186,16 +200,16 @@ void dynamixel::base::read_mem(const size_t start, const size_t length) {
                 m_checksum_error = false;
                 m_load_error = false;
                 m_instruction_error = false;
+            } else {
+                std::cerr << "Returning packet has invalid checksum.\n" ;
             }
-            else {
-                //cerr << "Returning packet has invalid checksum." << endl;
-            }
-        }
-        else {
+        } else {
             handle_error(status_packet[4]);
         }
+        delete[] status_packet;
+    } else {
+        m_com->raw_write_read(packet, sizeof(packet), nullptr, 0, m_is_half_duplex);
     }
-    delete[] status_packet;
 }
 
 void dynamixel::base::write_mem(const uint8_t* data,
@@ -211,15 +225,14 @@ void dynamixel::base::write_mem(const uint8_t* data,
     packet[4] = 0x03;
     packet[5] = start;
     ::memcpy(&packet[6], &data, size);
-    add_checksum(packet, 7+size);
+    add_checksum(packet, 7 + size);
     // m_serial.write(packet.data(), packet.size());
-    if (m_status_return_level == 0x02) {
+    if(m_status_return_level == 0x02) {
         uint8_t status[6];
         // m_serial.read_mem(statusPacketBuffer, 6);
-        if (status[4] != 0x00) {
+        if(status[4] != 0x00) {
             handle_error(status[4]);
-        }
-        else if (!check_checksum(status, 6)) {
+        } else if(!check_checksum(status, 6)) {
             // TODO: Handle checksum error
         }
     }
@@ -234,57 +247,57 @@ uint16_t dynamixel::base::model_number() {
 
 dynamixel::base::model_t dynamixel::base::model() {
     uint16_t number = model_number();
-    switch (number) {
-    case 113:
-        return model_t::dx113;
-        break;
-    case 116:
-        return model_t::dx116;
-        break;
-    case 117:
-        return model_t::dx117;
-        break;
-    case 44:
-        return model_t::ax12w;
-        break;
-    case 12:
-        return model_t::ax12;
-        break;
-    case 18:
-        return model_t::ax18f;
-        break;
-    case 10:
-        return model_t::rx10;
-        break;
-    case 24:
-        return model_t::rx24f;
-        break;
-    case 28:
-        return model_t::rx28;
-        break;
-    case 64:
-        return model_t::rx64;
-        break;
-    case 107:
-        return model_t::ex106plus;
-        break;
-    case 104:
-        return model_t::mx12w;
-        break;
-    case 29:
-        return model_t::mx28;
-        break;
-    case 54:
-        return model_t::mx64;
-        break;
-    case 320:
-        return model_t::mx106;
-        break;
-    case 350:
-        return model_t::xl320;
-        break;
-    default:
-        return model_t::unknown;
+    switch(number) {
+        case 113:
+            return model_t::dx113;
+            break;
+        case 116:
+            return model_t::dx116;
+            break;
+        case 117:
+            return model_t::dx117;
+            break;
+        case 44:
+            return model_t::ax12w;
+            break;
+        case 12:
+            return model_t::ax12;
+            break;
+        case 18:
+            return model_t::ax18f;
+            break;
+        case 10:
+            return model_t::rx10;
+            break;
+        case 24:
+            return model_t::rx24f;
+            break;
+        case 28:
+            return model_t::rx28;
+            break;
+        case 64:
+            return model_t::rx64;
+            break;
+        case 107:
+            return model_t::ex106plus;
+            break;
+        case 104:
+            return model_t::mx12w;
+            break;
+        case 29:
+            return model_t::mx28;
+            break;
+        case 54:
+            return model_t::mx64;
+            break;
+        case 320:
+            return model_t::mx106;
+            break;
+        case 350:
+            return model_t::xl320;
+            break;
+        default:
+            return model_t::unknown;
     }
 }
 
@@ -370,20 +383,18 @@ uint16_t dynamixel::base::status_level() {
 
 bool dynamixel::base::is_torque_enabled() {
     this->read_mem(0x18, 1);
-    if (this->m_data[0x18] == 1) {
+    if(this->m_data[0x18] == 1) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
 bool dynamixel::base::is_led_enabled() {
     this->read_mem(0x19, 1);
-    if (this->m_data[0x19] == 1) {
+    if(this->m_data[0x19] == 1) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -446,30 +457,27 @@ uint16_t dynamixel::base::current_temperature() {
 
 bool dynamixel::base::is_registered() {
     this->read_mem(0x2C, 1);
-    if (this->m_data[0x2C] == 1) {
+    if(this->m_data[0x2C] == 1) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
 bool dynamixel::base::is_moving() {
     this->read_mem(0x2E, 1);
-    if (this->m_data[0x2E] == 0x01) {
+    if(this->m_data[0x2E] == 0x01) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
 
 bool dynamixel::base::is_locked() {
     this->read_mem(0x2F, 1);
-    if (this->m_data[0x2F] == 1) {
+    if(this->m_data[0x2F] == 1) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -484,7 +492,7 @@ uint16_t dynamixel::base::punch() {
 void dynamixel::base::set_position(uint16_t position) {
     uint8_t packet[] = { // L-H
         static_cast<uint8_t>(position & 0x00FF),
-        static_cast<uint8_t>(position>> 8),
+        static_cast<uint8_t>(position >> 8),
     };
     this->write_mem(packet, 0x02, 0x1E);
 }
@@ -532,18 +540,18 @@ void dynamixel::base::go(float target, float speed,
                          angle_t a_unit) {
     uint16_t target_position{0};
     uint16_t target_speed{0};
-    switch (a_unit) {
-    case angle_t::step:
-        target_position = static_cast<uint16_t>(target); // No gap needed
-        break;
-    case angle_t::degree:
-        target_position = static_cast<uint16_t>(target * m_resolution_d) - m_start_gap;
-        break;
-    case angle_t::radian:
-        target_position = static_cast<uint16_t>(target * m_resolution_r) - m_start_gap;
-        break;
-    default:
-        break;
+    switch(a_unit) {
+        case angle_t::step:
+            target_position = static_cast<uint16_t>(target); // No gap needed
+            break;
+        case angle_t::degree:
+            target_position = static_cast<uint16_t>(target * m_resolution_d) - m_start_gap;
+            break;
+        case angle_t::radian:
+            target_position = static_cast<uint16_t>(target * m_resolution_r) - m_start_gap;
+            break;
+        default:
+            break;
     }
     target_speed = static_cast<uint16_t>(speed);
     set_position_speed(target_position, target_speed);
@@ -552,18 +560,18 @@ void dynamixel::base::go(float target, float speed,
 
 void dynamixel::base::go(const float target, const angle_t a_unit) {
     uint16_t target_position;
-    switch (a_unit) {
-    case angle_t::degree:
-        target_position = static_cast<uint16_t>(target * m_resolution_d) - m_start_gap;
-        break;
-    case angle_t::radian:
-        target_position = static_cast<uint16_t>(target * m_resolution_r) - m_start_gap;
-        break;
-    case angle_t::step:
-    default:
-        target_position = static_cast<uint16_t>(target);
-        break;
-        break;
+    switch(a_unit) {
+        case angle_t::degree:
+            target_position = static_cast<uint16_t>(target * m_resolution_d) - m_start_gap;
+            break;
+        case angle_t::radian:
+            target_position = static_cast<uint16_t>(target * m_resolution_r) - m_start_gap;
+            break;
+        case angle_t::step:
+        default:
+            target_position = static_cast<uint16_t>(target);
+            break;
+            break;
     }
     set_position(target_position);
 }
@@ -573,32 +581,30 @@ void dynamixel::base::rotate(const float angle, const uint16_t speed,
     const uint16_t current_position = this->current_position();
     uint16_t target_position;
     uint16_t target_speed;
-    switch (a_u) {
-    case angle_t::degree:
-        target_position = current_position + (angle * m_resolution_r);
-        break;
-    case angle_t::radian:
-        target_position = current_position + (angle * m_resolution_r);
-        break;
-    case angle_t::step:
-    default:
-        target_position = current_position + angle;
-        break;
-        break;
+    switch(a_u) {
+        case angle_t::degree:
+            target_position = current_position + (angle * m_resolution_r);
+            break;
+        case angle_t::radian:
+            target_position = current_position + (angle * m_resolution_r);
+            break;
+        case angle_t::step:
+        default:
+            target_position = current_position + angle;
+            break;
+            break;
     }
-    if (target_position < 0) {
+    if(target_position < 0) {
         // TODO: Handle underflow error
         target_position = 0;
-    }
-    else if (target_position > this->m_steps) {
+    } else if(target_position > this->m_steps) {
         // TODO: Handle overflow error
         target_position = this->m_steps;
     }
-    if (speed > this->m_max_speed) {
+    if(speed > this->m_max_speed) {
         // TODO: Handle overflow error
         target_speed = this->m_max_speed;
-    }
-    else {
+    } else {
         target_speed = speed;
     }
     set_position_speed(target_position, target_speed);
@@ -608,23 +614,22 @@ void dynamixel::base::rotate(const float angle,
                              const dynamixel::base::angle_t a_u) {
     const uint16_t current_position = this->current_position();
     uint16_t target_position;
-    switch (a_u) {
-    case angle_t::degree:
-        target_position = current_position + (angle * m_resolution_r);
-        break;
-    case angle_t::radian:
-        target_position = current_position + (angle * m_resolution_r);
-        break;
-    case angle_t::step:
-    default:
-        target_position = current_position + angle;
-        break;
+    switch(a_u) {
+        case angle_t::degree:
+            target_position = current_position + (angle * m_resolution_r);
+            break;
+        case angle_t::radian:
+            target_position = current_position + (angle * m_resolution_r);
+            break;
+        case angle_t::step:
+        default:
+            target_position = current_position + angle;
+            break;
     }
-    if (target_position < 0) {
+    if(target_position < 0) {
         // TODO: Handle underflow error
         target_position = 0;
-    }
-    else if (target_position > this->m_steps) {
+    } else if(target_position > this->m_steps) {
         // TODO: Handle overflow error
         target_position = this->m_steps;
     }
@@ -633,7 +638,7 @@ void dynamixel::base::rotate(const float angle,
 
 void dynamixel::base::add_checksum(uint8_t* const input, const size_t length) {
     uint16_t sum = 0;
-    for (size_t index = 2; index < length - 1; ++index) {
+    for(size_t index = 2; index < length - 1; ++index) {
         sum += input[index];
     }
     uint8_t low = ~(static_cast<uint8_t>(sum));
@@ -642,7 +647,7 @@ void dynamixel::base::add_checksum(uint8_t* const input, const size_t length) {
 
 bool dynamixel::base::check_checksum(const uint8_t* const input, const size_t length) {
     uint16_t sum = 0;
-    for (size_t index = 2; index < length - 1; ++index) {
+    for(size_t index = 2; index < length - 1; ++index) {
         sum += input[index];
     }
     uint8_t low = ~(static_cast<uint8_t>(sum));
@@ -657,32 +662,37 @@ void dynamixel::base::handle_error(const uint8_t error_code) {
     m_checksum_error = false;
     m_load_error = false;
     m_instruction_error = false;
-    if ((error_code & 0x01) == 0x01) {
+    if((error_code & 0x01) == 0x01) {
         std::cerr << "Input voltage is out of range.\n";
         m_voltage_error = true;
     }
-    if ((error_code & 0x02) == 0x02) {
+    if((error_code & 0x02) == 0x02) {
         std::cerr << "Goal position is out of range.\n";
         m_angle_error = true;
     }
-    if ((error_code & 0x04) == 0x04) {
+    if((error_code & 0x04) == 0x04) {
         std::cerr << "Temperature is out of range.\n";
         m_temperature_error = true;
     }
-    if ((error_code & 0x08) == 0x08) {
+    if((error_code & 0x08) == 0x08) {
         std::cerr << "Range is invalid.\n";
         m_range_error = true;
     }
-    if ((error_code & 0x10) == 0x10) {
+    if((error_code & 0x10) == 0x10) {
         std::cerr << "Checksum is invalid.\n";
         m_checksum_error = true;
     }
-    if ((error_code & 020) == 0x20) {
+    if((error_code & 020) == 0x20) {
         std::cerr << "Load is out of range.\n";
         m_load_error = true;
     }
-    if ((error_code & 040) == 0x40) {
+    if((error_code & 040) == 0x40) {
         std::cerr << "Instruction is out of range.\n";
         m_instruction_error = true;
     }
+}
+
+// Serial Communication
+void dynamixel::base::set_communicator(dynamixel::communicator* com) {
+    m_com = com;
 }
